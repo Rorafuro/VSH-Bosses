@@ -77,7 +77,7 @@ public void PainisCupcake_Create(SaxtonHaleBase boss)
   boss.CreateClass("BraveJump");
   
   boss.CreateClass("BodyEat");
-  boss.SetPropInt("BodyEat", "MaxHeal", 400);
+  boss.SetPropInt("BodyEat", "MaxHeal", 800);
   boss.SetPropFloat("BodyEat", "MaxEatDistance", 100.0);
   boss.SetPropFloat("BodyEat", "EatRageRadius", 450.0);
   boss.SetPropFloat("BodyEat", "EatRageDuration", 8.0);
