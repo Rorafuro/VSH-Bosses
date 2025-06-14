@@ -157,6 +157,7 @@ bool g_bTF2Items;
 int g_iSpritesLaserbeam;
 int g_iSpritesGlow;
 
+#include "vshboss/abilities/ability_bodyeat.sp"
 #include "vshboss/abilities/ability_brave_jump.sp"
 #include "vshboss/abilities/ability_dash_jump.sp"
 #include "vshboss/abilities/ability_groundpound.sp"
