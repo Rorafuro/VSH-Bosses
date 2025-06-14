@@ -5,7 +5,7 @@ static bool g_bBodyBlockRagdoll;
 
 public void BodyEat_Create(SaxtonHaleBase boss)
 {
-  boss.SetPropInt("BodyEat", "MaxHeal", 500);
+  boss.SetPropInt("BodyEat", "MaxHeal", 1000);
   boss.SetPropFloat("BodyEat", "MaxEatDistance", 100.0);
   boss.SetPropFloat("BodyEat", "EatRageRadius", 450.0);
   boss.SetPropFloat("BodyEat", "EatRageDuration", 10.0);
