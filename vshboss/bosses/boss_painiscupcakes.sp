@@ -77,7 +77,7 @@ public void PainisCupcake_Create(SaxtonHaleBase boss)
 	boss.CreateClass("BraveJump");
 	
 	boss.CreateClass("BodyEat");
-	boss.SetPropInt("BodyEat", "MaxHeal", 400);
+	boss.SetPropInt("BodyEat", "MaxHeal", 800);
 	boss.SetPropFloat("BodyEat", "MaxEatDistance", 100.0);
 	boss.SetPropFloat("BodyEat", "EatRageRadius", 450.0);
 	boss.SetPropFloat("BodyEat", "EatRageDuration", 8.0);
@@ -109,7 +109,7 @@ public void PainisCupcake_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int len
 	StrCat(sInfo, length, "\n ");
 	StrCat(sInfo, length, "\nAbilities");
 	StrCat(sInfo, length, "\n- Brave Jump");
-	StrCat(sInfo, length, "\n- Holding reload key eats dead bodies to heal up to 400 HP, recovered health depends on damage the player did");
+	StrCat(sInfo, length, "\n- Holding reload key eats dead bodies to heal up to 800 HP, recovered health depends on damage the player did");
 	StrCat(sInfo, length, "\n ");
 	StrCat(sInfo, length, "\nRage");
 	StrCat(sInfo, length, "\n- Damage requirement: 2500");
