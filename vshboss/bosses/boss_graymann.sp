@@ -351,7 +351,7 @@ public bool GrayMannPyroMinion_IsBossHidden(SaxtonHaleBase boss)
 public void GrayMannSoldierMinion_OnSpawn(SaxtonHaleBase boss) //Soldier's Attributes
 {
 	char sAttribs[64];
-	strcopy(sAttribs, sizeof(sAttribs), "1 ; 0.5 ; 4 ; 2.0 ; 5 ; 2.0 ; 97 ; 0.5 ; 252 ; 0.5 ; 259 ; 1.0");
+	strcopy(sAttribs, sizeof(sAttribs), "1 ; 1.0 ; 4 ; 2.0 ; 5 ; 2.0 ; 97 ; 0.5 ; 252 ; 0.5 ; 259 ; 1.0");
 	int iWeapon = boss.CallFunction("CreateWeapon", 205, "tf_weapon_rocketlauncher", 10, TFQual_Collectors, sAttribs);
 	TF2_SetAmmo(boss.iClient, TF_AMMO_PRIMARY, 99999);
 	if (iWeapon > MaxClients)
@@ -386,7 +386,7 @@ public void GrayMannSoldierMinion_OnSpawn(SaxtonHaleBase boss) //Soldier's Attri
 public void GrayMannDemomanMinion_OnSpawn(SaxtonHaleBase boss) //Demo's Attributes
 {
 	char sAttribs[64];
-	strcopy(sAttribs, sizeof(sAttribs), "1 ; 0.5 ; 4 ; 2.0 ; 5 ; 2.0 ; 97 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0");
+	strcopy(sAttribs, sizeof(sAttribs), "1 ; 1.0 ; 4 ; 2.0 ; 5 ; 2.0 ; 97 ; 1.0 ; 252 ; 0.5 ; 259 ; 1.0");
 	int iWeapon = boss.CallFunction("CreateWeapon", 206, "tf_weapon_grenadelauncher", 10, TFQual_Collectors, sAttribs);
 	TF2_SetAmmo(boss.iClient, TF_AMMO_PRIMARY, 99999);
 	if (iWeapon > MaxClients)
@@ -418,7 +418,7 @@ public void GrayMannDemomanMinion_OnSpawn(SaxtonHaleBase boss) //Demo's Attribut
 public void GrayMannPyroMinion_OnSpawn(SaxtonHaleBase boss) //Pyro's Attributes. Don't touch it. Don't even blink. Don't do fucking ANYTHING.
 {
 	char sAttribs[64];
-	strcopy(sAttribs, sizeof(sAttribs), "823 ; 1 ; 844 ; 1850.0 ; 841 ; 0 ; 843 ; 10 ; 862 ; 0.50 ; 1 ; 0.5 ; 4 ; 2.0 ; 356 ; 1.0 ; 252 ; 0.5 ; 259 ; 1.0");
+	strcopy(sAttribs, sizeof(sAttribs), "823 ; 1 ; 844 ; 1850.0 ; 841 ; 0 ; 843 ; 10 ; 862 ; 0.50 ; 1 ; 0.5 ; 4 ; 2.0 ; 356 ; 1.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 162 ; 4.0");
 	int iWeapon = boss.CallFunction("CreateWeapon", 208, "tf_weapon_flamethrower", 100, TFQual_Collectors, sAttribs);
 	TF2_SetAmmo(boss.iClient, TF_AMMO_PRIMARY, 99999);
 	if (iWeapon > MaxClients)
