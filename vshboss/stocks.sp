@@ -94,6 +94,39 @@ stock int TF2_GetItemInSlot(int iClient, int iSlot)
   return iWeapon;
 }
 
+
+stock bool TF2_CreateEntityGlow(int iEntity, char[] sModel, int iColor[4] = {255, 255, 255, 255})
+{
+  int iGlow = CreateEntityByName("tf_taunt_prop");
+  if (iGlow != -1)
+  {
+    SetEntityModel(iGlow, sModel);
+    
+    DispatchSpawn(iGlow);
+    ActivateEntity(iGlow);
+    
+    SetEntityRenderMode(iGlow, RENDER_TRANSCOLOR);
+    SetEntityRenderColor(iGlow, 0, 0, 0, 0);
+    
+    int iGlowManager = TF2_CreateGlow(iGlow, iColor);
+    SDK_AlwaysTransmitEntity(iGlow);
+    SDK_AlwaysTransmitEntity(iGlowManager);
+    
+    // Set effect flags.
+    int iFlags = GetEntProp(iGlow, Prop_Send, "m_fEffects");
+    SetEntProp(iGlow, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE); // EF_BONEMERGE
+    
+    SetVariantString("!activator");
+    AcceptEntityInput(iGlow, "SetParent", iEntity);
+    
+    SetEntPropEnt(iGlow, Prop_Send, "m_hOwnerEntity", iGlowManager);
+    return true;
+  }
+  
+  return false;
+}
+
+
 stock int TF2_SpawnParticle(char[] sParticle, float vecOrigin[3] = NULL_VECTOR, float vecAngles[3] = NULL_VECTOR, bool bActivate = true, int iEntity = 0, int iControlPoint = 0, const char[] sAttachment = "", const char[] sAttachmentOffset = "")
 {
   int iParticle = CreateEntityByName("info_particle_system");

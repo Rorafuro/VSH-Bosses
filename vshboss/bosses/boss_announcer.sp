@@ -93,7 +93,7 @@ public void Announcer_OnSpawn(SaxtonHaleBase boss)
   int iWeapon;
   char attribs[128];
   
-  Format(attribs, sizeof(attribs), "37 ; 0.0 ; 106 ; 0.0 ; 117 ; 0.0");
+  Format(attribs, sizeof(attribs), "37 ; 0.0 ; 252 ; 0.5 ; 106 ; 0.0 ; 117 ; 0.0");
   iWeapon = boss.CallFunction("CreateWeapon", 525, "tf_weapon_revolver", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
   {
@@ -104,6 +104,7 @@ public void Announcer_OnSpawn(SaxtonHaleBase boss)
   Diamondback attributes:
   
   2: Damage bonus
+  252: reduction in push force taken from damage
   37: mult_maxammo_primary
   106: More accurate
   117: Attrib_Dmg_Falloff_Increased	//Doesnt even work thanks valve

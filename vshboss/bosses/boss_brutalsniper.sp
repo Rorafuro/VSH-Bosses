@@ -115,7 +115,7 @@ public void BrutalSniper_OnSpawn(SaxtonHaleBase boss)
   int iWeapon;
   char attribs[128];
   
-  Format(attribs, sizeof(attribs), "2 ; 2.3 ; 6 ; 0.01 ; 280 ; 19 ; 551 ; 1.0");
+  Format(attribs, sizeof(attribs), "2 ; 2.3 ; 252 ; 0.5 ; 6 ; 0.01 ; 280 ; 19 ; 551 ; 1.0");
   iWeapon = boss.CallFunction("CreateWeapon", 56, "tf_weapon_compound_bow", 100, TFQual_Collectors, attribs);
   if (IsValidEntity(iWeapon)) 
   {
@@ -126,6 +126,7 @@ public void BrutalSniper_OnSpawn(SaxtonHaleBase boss)
   Huntsman attributes:
   
   2: Damage bonus
+  252: reduction in push force taken from damage
   6: faster firing speed
   280: override_projectile_type
   551: special_taunt

@@ -214,7 +214,7 @@ public void Bunny_OnSpawn(SaxtonHaleBase boss)
   int iWeapon;
   char attribs[128];
 
-  Format(attribs, sizeof(attribs), "68 ; 2.0 ; 2 ; 3.0 ; 326 ; 1.3 ; 275 ; 1");
+  Format(attribs, sizeof(attribs), "68 ; 2.0 ; 252 ; 0.5 ; 2 ; 3.0 ; 326 ; 1.3 ; 275 ; 1");
   iWeapon = boss.CallFunction("CreateWeapon", 609, "tf_weapon_bottle", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -284,6 +284,8 @@ public void Bunny_OnRage(SaxtonHaleBase boss)
     SetEntProp(iWeapon, Prop_Send, "m_iClip1", 50);
     TF2_SetAmmo(iClient, TF_AMMO_PRIMARY, 0);
   }
+
+    TF2_AddCondition(iClient, TFCond_CritOnWin, 4.0); // Crits for 4 seconds
 
   /*
   Grenade Launchere attributes:

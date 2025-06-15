@@ -157,6 +157,7 @@ bool g_bTF2Items;
 int g_iSpritesLaserbeam;
 int g_iSpritesGlow;
 
+#include "vshboss/abilities/ability_body_eat.sp"
 #include "vshboss/abilities/ability_brave_jump.sp"
 #include "vshboss/abilities/ability_dash_jump.sp"
 #include "vshboss/abilities/ability_groundpound.sp"
@@ -208,7 +209,7 @@ public Plugin myinfo =
 {
   name               = "VSH Bosses",
   author             = "Aidan Sanders",
-  description        = "Subplugin for VSH-Rewrite - handling bosses",
+  description        = "",
   version            = PLUGIN_VERSION ... "." ... PLUGIN_VERSION_REVISION,
   url                = "",
 };
