@@ -168,8 +168,8 @@ public void Announcer_OnRage(SaxtonHaleBase boss)
   int iPrimaryWep = GetPlayerWeaponSlot(boss.iClient, WeaponSlot_Primary);
   if (IsValidEntity(iPrimaryWep))
   {
-    int iClip = 2 + RoundToFloor(iPlayerCount / 8.0);
-    if (boss.bSuperRage) iClip *= 2;
+    int iClip = 4 + RoundToFloor(iPlayerCount / 8.0);
+    if (boss.bSuperRage) iClip *= 4;
     iClip += GetEntProp(iPrimaryWep, Prop_Send, "m_iClip1");
     if (iClip > 8) iClip = 8;
     
