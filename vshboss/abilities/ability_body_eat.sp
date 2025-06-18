@@ -5,7 +5,7 @@ static bool g_bBodyBlockRagdoll;
 
 public void BodyEat_Create(SaxtonHaleBase boss)
 {
-	boss.SetPropInt("BodyEat", "MaxHeal", 500);
+	boss.SetPropInt("BodyEat", "MaxHeal", 1000);
 	boss.SetPropFloat("BodyEat", "MaxEatDistance", 100.0);
 	boss.SetPropFloat("BodyEat", "EatRageRadius", 450.0);
 	boss.SetPropFloat("BodyEat", "EatRageDuration", 10.0);
@@ -88,7 +88,7 @@ public void BodyEat_EatBody(SaxtonHaleBase boss, int iEnt)
 		eatDuration *= 2.0;
 	if (lastRageTime == 0.0 || (GetGameTime()-lastRageTime) > eatDuration)
 	{
-		TF2_StunPlayer(boss.iClient, 2.0, 1.0, 35);
+		TF2_StunPlayer(boss.iClient, 1.0, 1.0, 35);
 		TF2_AddCondition(boss.iClient, TFCond_DefenseBuffed, 2.0);
 		EmitSoundToAll(BODY_EAT, boss.iClient, SNDCHAN_VOICE, SNDLEVEL_SCREAMING);
 	}
