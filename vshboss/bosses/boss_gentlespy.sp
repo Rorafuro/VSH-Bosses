@@ -131,7 +131,7 @@ public void GentleSpy_OnSpawn(SaxtonHaleBase boss)
   221: Attrib_DecloakRate
   */
   
-  Format(attribs, sizeof(attribs), "2 ; 3.75 ; 259 ; 1.0 ; 812 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 4.875 ; 259 ; 1.0 ; 812 ; 2.0 ; 68 ; 2.0");
   iWeapon = boss.CallFunction("CreateWeapon", 225, "tf_weapon_knife", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -141,6 +141,7 @@ public void GentleSpy_OnSpawn(SaxtonHaleBase boss)
   2: damage bonus
   252: reduction in push force taken from damage ( 252 ; 0.0 )
   259: Deals 3x falling damage to the player you land on
+  68: 3x capture rate
   */
 }
 
