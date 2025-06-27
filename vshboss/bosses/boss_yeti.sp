@@ -79,7 +79,7 @@ public void Yeti_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 
 public void Yeti_OnSpawn(SaxtonHaleBase boss)
 {
-  int iWeapon = boss.CallFunction("CreateWeapon", 195, NULL_STRING, 100, TFQual_Strange, "2 ; 2.31  ; 252 ; 0.5 ; 259 ; 1.0 ; 812 ; 2.0");
+  int iWeapon = boss.CallFunction("CreateWeapon", 195, NULL_STRING, 100, TFQual_Strange, "2 ; 3.0  ; 252 ; 0.5 ; 259 ; 1.0 ; 812 ; 2.0 ; 68 ; 2.0");
   if (iWeapon > MaxClients)
   {
     TF2Attrib_SetByDefIndex(iWeapon, 214, view_as<float>(GetRandomInt(7500, 7615)));
@@ -92,6 +92,7 @@ public void Yeti_OnSpawn(SaxtonHaleBase boss)
   252: reduction in push force taken from damage (252 ; 0.2)
   259: Deals 3x falling damage to the player you land on
   214: kill_eater (7500-7615 for Legendary strange rank)
+  68: 3x capture rate
   */
 }
 
