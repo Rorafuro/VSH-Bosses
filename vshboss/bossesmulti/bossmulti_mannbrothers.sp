@@ -21,7 +21,7 @@ public void MannBrothers_GetBossMultiName(SaxtonHaleBase boss, char[] sName, int
 
 public void MannBrothers_GetBossMultiInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 {
-  StrCat(sInfo, length, "\nMelee deals 124 damage");
+  StrCat(sInfo, length, "\nMelee deals 195 damage");
   StrCat(sInfo, length, "\nHealth: Low");
   StrCat(sInfo, length, "\n ");
   StrCat(sInfo, length, "\nAbilities");
@@ -36,7 +36,7 @@ public void MannBrothers_GetBossMultiInfo(SaxtonHaleBase boss, char[] sInfo, int
 public void MannBrothers_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 2.3 ; 259 ; 1.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 259 ; 1.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 574, "tf_weapon_knife", 100, TFQual_Haunted, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -46,6 +46,7 @@ public void MannBrothers_OnSpawn(SaxtonHaleBase boss)
   2: damage bonus
   252: reduction in push force taken from damage (252 ; 0.0 )
   259: Deals 3x falling damage to the player you land on
+  68: 3x capture rate
   */
 }
 
