@@ -30,7 +30,7 @@ public void Seeldier_GetBossName(SaxtonHaleBase boss, char[] sName, int length)
 public void Seeldier_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 {
   StrCat(sInfo, length, "\nDuo Boss with Seeman");
-  StrCat(sInfo, length, "\nMelee deals 124 damage");
+  StrCat(sInfo, length, "\nMelee deals 195 damage");
   StrCat(sInfo, length, "\nHealth: Low");
   StrCat(sInfo, length, "\n ");
   StrCat(sInfo, length, "\nAbilities");
@@ -45,7 +45,7 @@ public void Seeldier_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 public void Seeldier_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 1.9 ; 252 ; 0.5 ; 259 ; 1.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 195, "tf_weapon_shovel", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -55,6 +55,7 @@ public void Seeldier_OnSpawn(SaxtonHaleBase boss)
   2: damage bonus
   252: reduction in push force taken from damage (252 ; 0.2 )
   259: Deals 3x falling damage to the player you land on
+  68: 3x capture rate
   */
 }
 
