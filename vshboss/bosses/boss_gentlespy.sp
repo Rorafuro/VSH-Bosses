@@ -101,7 +101,7 @@ public void GentleSpy_OnSpawn(SaxtonHaleBase boss)
   int iWeapon;
   char attribs[128];
   
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 4 ; 1.34 ; 37 ; 0.0 ; 106 ; 0.0 ; 117 ; 0.0 ; 389 ; 1.0");
+  Format(attribs, sizeof(attribs), "2 ; 4.875 ; 4 ; 1.34 ; 37 ; 0.0 ; 106 ; 0.0 ; 117 ; 0.0 ; 389 ; 1.0");
   iWeapon = boss.CallFunction("CreateWeapon", 61, "tf_weapon_revolver", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
   {
