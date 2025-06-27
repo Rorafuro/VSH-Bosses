@@ -130,7 +130,7 @@ public void Merasmus_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 public void Merasmus_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 2.31 ; 252 ; 0.5 ; 259 ; 1.0 ; 610 ; 2.0 ; 812 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 610 ; 2.0 ; 812 ; 2.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 3, "tf_weapon_club", 666, TFQual_Haunted, attribs);
   if (iWeapon > MaxClients)
   {
@@ -154,6 +154,7 @@ public void Merasmus_OnSpawn(SaxtonHaleBase boss)
   259: Deals 3x falling damage to the player you land on
   610: increased air control
   214: kill_eater
+  68: 3x capture rate
   */
 }
 

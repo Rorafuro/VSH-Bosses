@@ -77,7 +77,7 @@ public void PainisCupcake_Create(SaxtonHaleBase boss)
 	boss.CreateClass("BraveJump");
 	
 	boss.CreateClass("BodyEat");
-	boss.SetPropInt("BodyEat", "MaxHeal", 800);
+	boss.SetPropInt("BodyEat", "MaxHeal", 1000);
 	boss.SetPropFloat("BodyEat", "MaxEatDistance", 100.0);
 	boss.SetPropFloat("BodyEat", "EatRageRadius", 450.0);
 	boss.SetPropFloat("BodyEat", "EatRageDuration", 8.0);
@@ -144,7 +144,7 @@ public void PainisCupcake_OnRage(SaxtonHaleBase boss)
 public void PainisCupcake_OnSpawn(SaxtonHaleBase boss)
 {
 	char attribs[128];
-	Format(attribs, sizeof(attribs), "2 ; 2.80 ; 252 ; 0.5 ; 259 ; 1.0");
+	Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 68 ; 2.0");
 	int iWeapon = boss.CallFunction("CreateWeapon", 195, "tf_weapon_shovel", 100, TFQual_Strange, attribs);
 	if (iWeapon > MaxClients)
 		SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -154,6 +154,7 @@ public void PainisCupcake_OnSpawn(SaxtonHaleBase boss)
 	2: damage bonus
 	252: reduction in push force taken from damage
 	259: Deals 3x falling damage to the player you land on
+        68: 3x capture rate
 	*/
 }
 

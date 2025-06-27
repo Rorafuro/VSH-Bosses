@@ -180,7 +180,7 @@ public void GrayMann_OnSpawn(SaxtonHaleBase boss)
 {
 	int iWeapon;
 	char attribs[128];
-	Format(attribs, sizeof(attribs), "2 ; 2.80 ; 252 ; 0.5 ; 259 ; 1.0 ; 150 ; 1.0 ; 180 ; 100");
+	Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 150 ; 1.0 ; 180 ; 100 ; 326 ; 1.25 ; 68 ; 2.0");
 	iWeapon = boss.CallFunction("CreateWeapon", 169, "tf_weapon_wrench", 100, TFQual_Unusual, attribs);
 	if (iWeapon > MaxClients)
 	{
@@ -194,6 +194,8 @@ public void GrayMann_OnSpawn(SaxtonHaleBase boss)
 	259: Deals 3x falling damage to the player you land on
 	150: turn to gold
 	180: heal on kill
+        326: increased jump height
+        68: 3x capture rate
 	*/
 }
 

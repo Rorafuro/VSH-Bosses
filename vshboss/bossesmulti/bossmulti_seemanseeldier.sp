@@ -17,7 +17,7 @@ public void SeeManSeeldier_GetBossMultiName(SaxtonHaleBase boss, char[] sName, i
 
 public void SeeManSeeldier_GetBossMultiInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 {
-  StrCat(sInfo, length, "\nMelee deals 124 damage");
+  StrCat(sInfo, length, "\nMelee deals 195 damage");
   StrCat(sInfo, length, "\nHealth: Low");
   StrCat(sInfo, length, "\n ");
   StrCat(sInfo, length, "\nAbilities");
