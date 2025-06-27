@@ -43,7 +43,7 @@ public void SeeMan_GetBossName(SaxtonHaleBase boss, char[] sName, int length)
 public void SeeMan_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 {
   StrCat(sInfo, length, "\nDuo Boss with Seeldier");
-  StrCat(sInfo, length, "\nMelee deals 124 damage");
+  StrCat(sInfo, length, "\nMelee deals 195 damage");
   StrCat(sInfo, length, "\nHealth: Low");
   StrCat(sInfo, length, "\n ");
   StrCat(sInfo, length, "\nAbilities");
