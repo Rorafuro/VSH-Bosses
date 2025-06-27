@@ -36,7 +36,7 @@ public void MannBrothers_GetBossMultiInfo(SaxtonHaleBase boss, char[] sInfo, int
 public void MannBrothers_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 259 ; 1.0 ; 68 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 4.875 ; 259 ; 1.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 574, "tf_weapon_knife", 100, TFQual_Haunted, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
