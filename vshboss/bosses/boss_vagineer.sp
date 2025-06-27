@@ -82,7 +82,7 @@ public void Vagineer_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 public void Vagineer_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[256];
-  Format(attribs, sizeof(attribs), "2 ; 2.31 ; 252 ; 0.5 ; 259 ; 1.0 ; 93 ; 0.0 ; 95 ; 0.0 ; 343 ; 0.5 ; 353 ; 1.0 ; 436 ; 1.0 ; 464 ; 10.0 ; 2043 ; 0.0 ; 812 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 68 ; 2.0 ; 93 ; 0.0 ; 95 ; 0.0 ; 343 ; 0.5 ; 353 ; 1.0 ; 436 ; 1.0 ; 464 ; 10.0 ; 2043 ; 0.0 ; 812 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 7, "tf_weapon_wrench", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -92,6 +92,7 @@ public void Vagineer_OnSpawn(SaxtonHaleBase boss)
   2: damage bonus
   252: reduction in push force taken from damage (252 ; 0.2 )
   259: Deals 3x falling damage to the player you land on
+  68: 3x capture rate
   
   93: Construction hit speed boost decreased
   95: Slower repair speed
