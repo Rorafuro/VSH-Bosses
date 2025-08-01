@@ -1,5 +1,5 @@
 #define BUNNY_MODEL "models/player/new_saxton_hale/easter_demo/new_easter_demo_v3.mdl"
-#define BUNNY_EGG		"models/player/saxton_hale/w_easteregg.mdl"
+#define BUNNY_EGG   "models/player/saxton_hale/w_easteregg.mdl"
 
 /// Easter Bunny voicelines
 static char g_strBunnyRoundStart[][] = {
@@ -285,7 +285,7 @@ public void Bunny_OnRage(SaxtonHaleBase boss)
     TF2_SetAmmo(iClient, TF_AMMO_PRIMARY, 0);
   }
 
-    TF2_AddCondition(iClient, TFCond_CritOnWin, 4.0); // Crits for 4 seconds
+  TF2_AddCondition(iClient, TFCond_CritOnWin, 4.0); // Crits for 4 seconds
 
   /*
   Grenade Launchere attributes:
