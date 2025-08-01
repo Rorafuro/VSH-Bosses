@@ -53,7 +53,7 @@ Action vortex_touch(int entity, int other)
 
 
 // Spawn Entrance later
-public void Timer_VortexEntrance(Handle hTimer)
+public Action Timer_VortexEntrance(Handle hTimer)
 {
   float duration = 30.0;
   gl_iVortexIndex[0] = CreateEntityByName("hightower_teleport_vortex");
@@ -83,6 +83,7 @@ public void Timer_VortexEntrance(Handle hTimer)
   CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(gl_iVortexIndex[0]), TIMER_FLAG_NO_MAPCHANGE);
   CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(AttachParticle(gl_iVortexIndex[0], "eyeboss_tp_vortex", 50.0, false, 28.0)));
 */
+  return Plugin_Handled;
 }
 
 
