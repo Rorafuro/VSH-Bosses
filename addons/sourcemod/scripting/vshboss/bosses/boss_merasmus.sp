@@ -89,7 +89,7 @@ static int g_iMerasmusModelArms = -1;
 //static int g_iBeamSprite = -1;
 //static int g_iHaloSprite = -1;
 
-static int g_iEntity = -1;
+//static int g_iEntity = -1;
 
 public void Merasmus_Create(SaxtonHaleBase boss)
 {
