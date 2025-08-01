@@ -102,7 +102,7 @@ public void UberRanger_OnSpawn(SaxtonHaleBase boss)
   9: ubercharge rate penalty
   */
   
-  strcopy(sAttribs, sizeof(sAttribs), "2 ; 2.31 ; 17 ; 0.1 ; 69 ; 0.5 ; 259 ; 1.0 ; 812 ; 2.0");
+  strcopy(sAttribs, sizeof(sAttribs), "2 ; 2.31 ; 17 ; 0.1 ; 69 ; 0.5 ; 812 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 37, "tf_weapon_bonesaw", 100, TFQual_Collectors, sAttribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -113,8 +113,7 @@ public void UberRanger_OnSpawn(SaxtonHaleBase boss)
   2: damage bonus
   17: add uber on hit
   69: health from healers reduced
-  252: reduction in push force taken from damage (252 ; 0.2)
-  259: Deals 3x falling damage to the player you land on
+  252: reduction in push force taken from damage
   */
   
   //We have to check if the color of the boss hasn't already been altered (usually by a modifier) before applying his default color

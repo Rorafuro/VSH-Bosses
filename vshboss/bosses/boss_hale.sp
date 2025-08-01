@@ -1,5 +1,8 @@
 #define HALE_MODEL "models/player/saxton_hale_jungle_inferno/saxton_hale_3.mdl"
+//#define HALE_MODEL "models/vsh/player/saxton_hale.mdl"
+#define HALE_MODEL_ARMS "models/vsh/weapons/c_models/c_saxton_hale_arms.mdl"
 
+static int g_iHaleModelArms = -1;
 static bool g_bHaleSpeedRage[MAXPLAYERS];
 
 static char g_strHaleRoundStart[][] = {
@@ -133,10 +136,10 @@ public void SaxtonHale_Create(SaxtonHaleBase boss)
 
   boss.CreateClass("Lunge");
   
-  boss.iHealthPerPlayer = 600;
+  boss.iHealthPerPlayer    = 600;
   boss.flHealthExponential = 1.05;
-  boss.nClass = TFClass_Soldier;
-  boss.iMaxRageDamage = 2500;
+  boss.nClass              = TFClass_Heavy; //TFClass_Soldier;
+  boss.iMaxRageDamage      = 2500;
 }
 
 public void SaxtonHale_GetBossName(SaxtonHaleBase boss, char[] sName, int length)
@@ -163,17 +166,22 @@ public void SaxtonHale_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length
 public void SaxtonHale_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  //                                
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 68 ; 2.0 ; 214 ; %d", GetRandomInt(9999, 99999));
-  int iWeapon = boss.CallFunction("CreateWeapon", 195, "tf_weapon_shovel", 100, TFQual_Strange, attribs);
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 68 ; 2.0 ; 214 ; %d", GetRandomInt(9999, 99999));
+  
+  int iWeapon = boss.CallFunction("CreateWeapon", 5, "tf_weapon_fists", 100, TFQual_Strange, attribs);
   if (iWeapon > MaxClients)
+  {
+    CreateViewModel(boss.iClient, g_iHaleModelArms);
+    SetEntProp(GetEntPropEnt(boss.iClient, Prop_Send, "m_hViewModel"), Prop_Send, "m_fEffects", EF_NODRAW);
+
     SetEntPropEnt(boss.iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
+    SetEntPropFloat(iWeapon, Prop_Send, "m_flModelScale", 0.0); // Just incase
+  }
   /*
   Fist attributes:
   
   2: damage bonus
   252: reduction in push force taken from damage (252 ; 0.2)
-  259: Deals 3x falling damage to the player you land on
   68: 3x capture rate
   214: kill_eater
   */
@@ -230,13 +238,13 @@ public void SaxtonHale_GetSound(SaxtonHaleBase boss, char[] sSound, int length, 
 {
   switch (iSoundType)
   {
-    case VSHSound_RoundStart: strcopy(sSound, length, g_strHaleRoundStart[GetRandomInt(0,sizeof(g_strHaleRoundStart)-1)]);
-    case VSHSound_Win: strcopy(sSound, length, g_strHaleWin[GetRandomInt(0,sizeof(g_strHaleWin)-1)]);
-    case VSHSound_Lose: strcopy(sSound, length, g_strHaleLose[GetRandomInt(0,sizeof(g_strHaleLose)-1)]);
-    case VSHSound_Rage: strcopy(sSound, length, g_strHaleRage[GetRandomInt(0,sizeof(g_strHaleRage)-1)]);
+    case VSHSound_RoundStart:   strcopy(sSound, length, g_strHaleRoundStart[GetRandomInt(0,sizeof(g_strHaleRoundStart)-1)]);
+    case VSHSound_Win:          strcopy(sSound, length, g_strHaleWin[GetRandomInt(0,sizeof(g_strHaleWin)-1)]);
+    case VSHSound_Lose:         strcopy(sSound, length, g_strHaleLose[GetRandomInt(0,sizeof(g_strHaleLose)-1)]);
+    case VSHSound_Rage:         strcopy(sSound, length, g_strHaleRage[GetRandomInt(0,sizeof(g_strHaleRage)-1)]);
     case VSHSound_KillBuilding: strcopy(sSound, length, g_strHaleKillBuilding[GetRandomInt(0,sizeof(g_strHaleKillBuilding)-1)]);
-    case VSHSound_Lastman: strcopy(sSound, length, g_strHaleLastMan[GetRandomInt(0,sizeof(g_strHaleLastMan)-1)]);
-    case VSHSound_Backstab: strcopy(sSound, length, g_strHaleBackStabbed[GetRandomInt(0,sizeof(g_strHaleBackStabbed)-1)]);
+    case VSHSound_Lastman:      strcopy(sSound, length, g_strHaleLastMan[GetRandomInt(0,sizeof(g_strHaleLastMan)-1)]);
+    case VSHSound_Backstab:     strcopy(sSound, length, g_strHaleBackStabbed[GetRandomInt(0,sizeof(g_strHaleBackStabbed)-1)]);
   }
 }
 
@@ -259,21 +267,21 @@ public void SaxtonHale_GetSoundKill(SaxtonHaleBase boss, char[] sSound, int leng
   {
     switch (nClass)
     {
-      case TFClass_Scout: strcopy(sSound, length, g_strHaleKillScout[GetRandomInt(0,sizeof(g_strHaleKillScout)-1)]);
-      case TFClass_Pyro: strcopy(sSound, length, g_strHaleKillPyro[GetRandomInt(0,sizeof(g_strHaleKillPyro)-1)]);
-      case TFClass_DemoMan: strcopy(sSound, length, g_strHaleKillDemoman[GetRandomInt(0,sizeof(g_strHaleKillDemoman)-1)]);
-      case TFClass_Heavy: strcopy(sSound, length, g_strHaleKillHeavy[GetRandomInt(0,sizeof(g_strHaleKillHeavy)-1)]);
+      case TFClass_Scout:    strcopy(sSound, length, g_strHaleKillScout[GetRandomInt(0,sizeof(g_strHaleKillScout)-1)]);
+      case TFClass_Pyro:     strcopy(sSound, length, g_strHaleKillPyro[GetRandomInt(0,sizeof(g_strHaleKillPyro)-1)]);
+      case TFClass_DemoMan:  strcopy(sSound, length, g_strHaleKillDemoman[GetRandomInt(0,sizeof(g_strHaleKillDemoman)-1)]);
+      case TFClass_Heavy:    strcopy(sSound, length, g_strHaleKillHeavy[GetRandomInt(0,sizeof(g_strHaleKillHeavy)-1)]);
       case TFClass_Engineer: strcopy(sSound, length, g_strHaleKillEngineer[GetRandomInt(0,sizeof(g_strHaleKillEngineer)-1)]);
-      case TFClass_Medic: strcopy(sSound, length, g_strHaleKillMedic[GetRandomInt(0,sizeof(g_strHaleKillMedic)-1)]);
-      case TFClass_Sniper: strcopy(sSound, length, g_strHaleKillSniper[GetRandomInt(0,sizeof(g_strHaleKillSniper)-1)]);
-      case TFClass_Spy: strcopy(sSound, length, g_strHaleKillSpy[GetRandomInt(0,sizeof(g_strHaleKillSpy)-1)]);
+      case TFClass_Medic:    strcopy(sSound, length, g_strHaleKillMedic[GetRandomInt(0,sizeof(g_strHaleKillMedic)-1)]);
+      case TFClass_Sniper:   strcopy(sSound, length, g_strHaleKillSniper[GetRandomInt(0,sizeof(g_strHaleKillSniper)-1)]);
+      case TFClass_Spy:      strcopy(sSound, length, g_strHaleKillSpy[GetRandomInt(0,sizeof(g_strHaleKillSpy)-1)]);
     }
   }
 }
 
 public Action SaxtonHale_OnSoundPlayed(SaxtonHaleBase boss, int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-  if (strncmp(sample, "vo/", 3) == 0)//Block voicelines
+  if (strncmp(sample, "vo/", 3) == 0) // Block voicelines
     return Plugin_Handled;
   return Plugin_Continue;
 }
@@ -281,6 +289,8 @@ public Action SaxtonHale_OnSoundPlayed(SaxtonHaleBase boss, int clients[MAXPLAYE
 public void SaxtonHale_Precache(SaxtonHaleBase boss)
 {
   PrecacheModel(HALE_MODEL);
+  g_iHaleModelArms = PrecacheModel(HALE_MODEL_ARMS);
+
   for (int i = 0; i < sizeof(g_strHaleRoundStart); i++) PrepareSound(g_strHaleRoundStart[i]);
   for (int i = 0; i < sizeof(g_strHaleWin); i++) PrepareSound(g_strHaleWin[i]);
   for (int i = 0; i < sizeof(g_strHaleLose); i++) PrepareSound(g_strHaleLose[i]);
@@ -339,5 +349,22 @@ public void SaxtonHale_Precache(SaxtonHaleBase boss)
   AddFileToDownloadsTable("models/player/saxton_hale_jungle_inferno/saxton_hale_3.vvd");
   AddFileToDownloadsTable("models/player/saxton_hale_jungle_inferno/saxton_hale_3.dx80.vtx");
   AddFileToDownloadsTable("models/player/saxton_hale_jungle_inferno/saxton_hale_3.dx90.vtx");
+
+  //models/vsh/weapons/c_models/c_saxton_hale_arms.mdl
+  AddFileToDownloadsTable("models/vsh/weapons/c_models/c_saxton_hale_animations.mdl")
+  AddFileToDownloadsTable("models/vsh/weapons/c_models/c_saxton_hale_arms.dx80.vtx")
+  AddFileToDownloadsTable("models/vsh/weapons/c_models/c_saxton_hale_arms.dx90.vtx")
+  AddFileToDownloadsTable("models/vsh/weapons/c_models/c_saxton_hale_arms.mdl")
+  AddFileToDownloadsTable("models/vsh/weapons/c_models/c_saxton_hale_arms.vvd")
+
+  // materials
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist.vmt"); 
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist.vtf");
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_chargedash.vmt"); 
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_chargedash.vtf"); 
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_exp.vtf");
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_megapunch.vmt");
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_megapunch.vtf"); 
+  AddFileToDownloadsTable("materials/models/vsh/player/saxton_hale/saxton_fist_normal.vtf");
 }
 

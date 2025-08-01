@@ -1,6 +1,9 @@
 static float g_flTeleportSwapCooldownWait[MAXPLAYERS];
 static bool g_bTeleportSwapHoldingChargeButton[MAXPLAYERS];
 
+static float gl_flVortexPos[3];
+static int gl_iVortexIndex[2];
+
 public void TeleportSwap_Create(SaxtonHaleBase boss)
 {
   //Default values, these can be changed if needed
@@ -13,7 +16,82 @@ public void TeleportSwap_Create(SaxtonHaleBase boss)
   
   g_flTeleportSwapCooldownWait[boss.iClient] = GetGameTime() + boss.GetPropFloat("TeleportSwap", "Cooldown");
   boss.CallFunction("UpdateHudInfo", 1.0, boss.GetPropFloat("TeleportSwap", "Cooldown"));	//Update every second for cooldown duration
+
+  gl_flVortexPos[0] = 0.0;
+  gl_flVortexPos[1] = 0.0;
+  gl_flVortexPos[2] = 0.0;
+
+  gl_iVortexIndex[0] = -1;
+  gl_iVortexIndex[1] = -1;
 }
+
+bool IsValidClient(int client)
+{
+    return (client > 0 && client <= MaxClients && IsClientInGame(client));
+}
+
+Action vortex_touch(int entity, int other)
+{
+    if (!IsValidEntity(other))
+        return Plugin_Continue;
+
+    // Only respond to real, in-game players
+    if (!IsValidClient(other))
+        return Plugin_Continue;
+
+    if (!SaxtonHale_IsValidBoss(other))
+    {
+        TF2_AddCondition(other, TFCond_EyeaductUnderworld, 0.1);
+    }
+    else
+    {
+        TF2_AddCondition(other, TFCond_SpeedBuffAlly, 5.0);
+    }
+
+    return Plugin_Continue;
+}
+
+
+// Spawn Entrance later
+public void Timer_VortexEntrance(Handle hTimer)
+{
+  float duration = 30.0;
+  gl_iVortexIndex[0] = CreateEntityByName("hightower_teleport_vortex");
+  DispatchKeyValueFloat(gl_iVortexIndex[0], "duration", duration);
+  DispatchKeyValueFloat(gl_iVortexIndex[0], "lifetime", GetGameTime() + duration);
+  DispatchKeyValue(gl_iVortexIndex[0], "target_base_name", "vortex_exit");
+  DispatchSpawn(gl_iVortexIndex[0]);
+  TeleportEntity(gl_iVortexIndex[0], gl_flVortexPos, NULL_VECTOR, NULL_VECTOR);
+  
+  // when player touches
+  SDKHook(gl_iVortexIndex[0], SDKHook_Touch, vortex_touch);
+  
+  // on think
+  //HookEntityThink(gl_iVortexIndex[0], vortex_think);
+
+  CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(gl_iVortexIndex[0]), TIMER_FLAG_NO_MAPCHANGE);
+  CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(AttachParticle(gl_iVortexIndex[0], "eyeboss_tp_vortex", 50.0, false, 28.0)));
+/*
+  float duration = 30.0;
+  // Spawn Portal Entrance at Client
+  //float flPos[3]; GetClientAbsOrigin(iClient, flPos); // this spawns entrace at placer...
+  gl_iVortexIndex[0] = CreateEntityByName("teleport_vortex"); // hightower_teleport_vortex
+  DispatchKeyValueFloat(gl_iVortexIndex[0], "duration", duration);
+  DispatchKeyValueFloat(gl_iVortexIndex[0], "lifetime", GetGameTime() + duration);
+  DispatchSpawn(gl_iVortexIndex[0]);
+  TeleportEntity(gl_iVortexIndex[0], gl_flVortexPos, NULL_VECTOR, NULL_VECTOR);
+  CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(gl_iVortexIndex[0]), TIMER_FLAG_NO_MAPCHANGE);
+  CreateTimer(28.0, RemoveEnt, EntIndexToEntRef(AttachParticle(gl_iVortexIndex[0], "eyeboss_tp_vortex", 50.0, false, 28.0)));
+*/
+}
+
+
+
+
+
+
+
+
 
 public void TeleportSwap_OnThink(SaxtonHaleBase boss)
 {
@@ -94,13 +172,6 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
         return;
       }
       
-      // Deny teleporting when out of the dome
-      //if (Dome_IsEntityOutside(boss.iClient))
-      //{
-      //	PrintHintText(boss.iClient, "Can't teleport-swap when outside of the dome.");
-      //	return;
-        //}
-      
       // Get a list of valid attackers
       ArrayList aClients = new ArrayList();
       for (int i = 1; i <= MaxClients; i++)
@@ -123,11 +194,8 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
       for (int i = 0; i < aClients.Length; i++)
       {
         int iTarget = aClients.Get(i);
-      //	if (Dome_IsEntityOutside(iTarget))
-      //		continue;
-      //	
         iClient[1] = iTarget;
-          break;
+        break;
       }
       
       delete aClients;
@@ -138,7 +206,12 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
         PrintHintText(boss.iClient, "Can't teleport-swap, all possible targets are outside of the dome.");
         return;
       }
-      
+
+      // Create Delayed Vortex Entrance.
+      GetClientAbsOrigin(iClient[0], gl_flVortexPos);
+      CreateTimer(2.0, Timer_VortexEntrance, TIMER_FLAG_NO_MAPCHANGE);
+
+      // Spawn Clients
       TF2_TeleportSwap(iClient);
       
       TF2_StunPlayer(iClient[0], boss.GetPropFloat("TeleportSwap", "StunDuration"), 0.0, TF_STUNFLAGS_GHOSTSCARE|TF_STUNFLAG_NOSOUNDOREFFECT, iClient[1]);
@@ -152,7 +225,15 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
       boss.CallFunction("GetSoundAbility", sSound, sizeof(sSound), "TeleportSwap");
       if (!StrEmpty(sSound))
         EmitSoundToAll(sSound, boss.iClient, SNDCHAN_VOICE, SNDLEVEL_SCREAMING);
+    
+      // Spawn Portal Exit at Boss
+      float flPos[3]; GetClientAbsOrigin(iClient[0], flPos);
+		  gl_iVortexIndex[1] = CreateEntityByName("info_target");
+      DispatchKeyValue(gl_iVortexIndex[1], "targetname", "vortex_exit_loser");
+		  DispatchSpawn(gl_iVortexIndex[1]);
+		  TeleportEntity(gl_iVortexIndex[1], flPos, NULL_VECTOR, NULL_VECTOR);
+      CreateTimer(30.0, RemoveEnt, EntIndexToEntRef(gl_iVortexIndex[1]), TIMER_FLAG_NO_MAPCHANGE);
+		  CreateTimer(30.0, RemoveEnt, EntIndexToEntRef(AttachParticle(iClient[0], "eb_death_vortex01", 50.0, false, 30.0)));
     }
   }
 }
-

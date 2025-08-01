@@ -1,4 +1,5 @@
 #define PARTICLE_TELEPORT	"merasmus_tp"
+#define TELEPORT_RADIUS 600.0
 
 enum TeleportViewMode
 {
@@ -12,6 +13,13 @@ static float g_vecTeleportViewPos[MAXPLAYERS][3];
 static float g_flTeleportViewStartCharge[MAXPLAYERS];
 static float g_flTeleportViewCooldownWait[MAXPLAYERS];
 
+static bool g_bIsBomb[MAXPLAYERS];
+static Handle g_hBombTimer[MAXPLAYERS];
+
+// on teleport we spawn bombs on players heads. 
+// hook players on touch to see if touches boss.
+// if timer runs out kill player.
+
 public void TeleportView_Create(SaxtonHaleBase boss)
 {
   //Default values, these can be changed if needed
@@ -21,7 +29,105 @@ public void TeleportView_Create(SaxtonHaleBase boss)
   g_flTeleportViewStartCharge[boss.iClient] = 0.0;
   g_flTeleportViewCooldownWait[boss.iClient] = GetGameTime() + boss.GetPropFloat("TeleportView", "Cooldown");
   boss.CallFunction("UpdateHudInfo", 1.0, boss.GetPropFloat("TeleportView", "Cooldown"));	//Update every second for cooldown duration
+
+  // Reset all bomb states and timers
+  for (int i = 1; i <= MaxClients; i++)
+  {
+    g_bIsBomb[i] = false;
+
+    if (g_hBombTimer[i] != null)
+    {
+      CloseHandle(g_hBombTimer[i]);
+      g_hBombTimer[i] = null;
+    }
+  }
 }
+
+
+
+
+public Action Bomb_TouchHook(int client, int other)
+{
+
+  // Validate the client holding the bomb
+  if (!IsValidClient(client) || !IsPlayerAlive(client) || !g_bIsBomb[client])
+    return Plugin_Continue;
+
+  // Validate the entity being touched
+  if (!IsValidClient(other) || !IsPlayerAlive(other) || g_bIsBomb[other])
+    return Plugin_Continue;
+
+
+  // if touching a boss
+  if (SaxtonHale_IsValidBoss(other))
+  {
+    PrintToChatAll("%N touched the boss!", client);
+
+    // Clear bomb from current holder
+    if (g_hBombTimer[client] != null)
+    {
+      CloseHandle(g_hBombTimer[client]);
+      g_hBombTimer[client] = null;
+    }
+
+    TF2_RemoveCondition(client, TFCond_HalloweenBombHead);
+    TF2_AddCondition(client, TFCond_Ubercharged, 10.0);
+    TF2_AddCondition(client, TFCond_SpeedBuffAlly, 10.0);
+
+    // Unhook and clear
+    SDKUnhook(client, SDKHook_Touch, Bomb_TouchHook);
+    g_bIsBomb[client] = false;
+
+    return Plugin_Continue;
+  }
+
+  PrintToChatAll("%N transferred the bomb to %N!", client, other);
+
+  // Clear bomb from current holder
+  if (g_hBombTimer[client] != null)
+  {
+    CloseHandle(g_hBombTimer[client]);
+    g_hBombTimer[client] = null;
+  }
+
+  TF2_RemoveCondition(client, TFCond_HalloweenBombHead);
+  TF2_AddCondition(client, TFCond_SpeedBuffAlly, 10.0);
+  SDKUnhook(client, SDKHook_Touch, Bomb_TouchHook);
+  
+  g_bIsBomb[client] = false;
+
+  // Apply bomb to touched player
+  g_bIsBomb[other] = true;
+
+  // Hook touch on new bomb carrier
+  SDKHook(other, SDKHook_Touch, Bomb_TouchHook);
+
+  // Set a new timer on the new bomb carrier
+  g_hBombTimer[other] = CreateTimer(10.0, Bomb_ExpireTimer, GetClientUserId(other));
+  return Plugin_Continue;
+}
+
+public Action Bomb_ExpireTimer(Handle timer, any userid)
+{
+  int client = GetClientOfUserId(userid);
+  g_hBombTimer[client] = null;
+
+  if (!IsClientInGame(client) || !IsPlayerAlive(client))
+      return Plugin_Stop;
+
+  if (g_bIsBomb[client])
+  {
+    PrintToChatAll("%N exploded because they didn't reach the boss!", client);
+    TF2_RemoveCondition(client, TFCond_HalloweenBombHead);
+    ForcePlayerSuicide(client);
+    SDKUnhook(client, SDKHook_Touch, Bomb_TouchHook);
+    g_bIsBomb[client] = false;
+  }
+
+  return Plugin_Stop;
+}
+
+
 
 public void TeleportView_OnThink(SaxtonHaleBase boss)
 {
@@ -70,6 +176,43 @@ public void TeleportView_OnThink(SaxtonHaleBase boss)
       g_flTeleportViewStartCharge[boss.iClient] = 0.0;
       
       SetEntityMoveType(boss.iClient, MOVETYPE_WALK);
+
+      float vecOrigin[3];
+      GetClientAbsOrigin(boss.iClient, vecOrigin);
+
+      float otherPos[3];
+      for (int i = 1; i <= MaxClients; i++)
+      {
+        if (!SaxtonHale_IsValidAttack(i) || !IsPlayerAlive(i) || i == boss.iClient)
+          continue;
+
+        GetClientAbsOrigin(i, otherPos);
+        if (GetVectorDistance(vecOrigin, otherPos) <= TELEPORT_RADIUS)
+        {
+          PrintToChatAll("%N was set as bomb!", i);
+          
+          g_bIsBomb[i] = true;
+
+          SetEntProp(i, Prop_Send, "m_nSolidType", 5); // 1 means no collision?
+          SetEntProp(i, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_PLAYER);
+
+          //SetEntProp(other, Prop_Send, "m_nSolidType", SOLID_BBOX);
+
+
+          SDKHook(i, SDKHook_Touch, Bomb_TouchHook);
+          TF2_AddCondition(i, TFCond_HalloweenBombHead, 30.0);
+          TF2_AddCondition(i, TFCond_SpeedBuffAlly, 30.0);
+
+          // Kill previous timer if it exists
+          if (g_hBombTimer[i] != null)
+          {
+            CloseHandle(g_hBombTimer[i]);
+            g_hBombTimer[i] = null;
+          }
+
+          g_hBombTimer[i] = CreateTimer(15.0, Bomb_ExpireTimer, GetClientUserId(i));
+        }
+      }
     }
     
     //Progress into finishing
@@ -121,7 +264,7 @@ public void TeleportView_OnThink(SaxtonHaleBase boss)
   
   if (flCharge >= boss.GetPropFloat("TeleportView", "Charge"))
   {
-    //Start teleport anim
+    // Start teleport anim
     
     g_nTeleportViewMode[boss.iClient] = TeleportViewMode_Teleporting;
     
@@ -132,6 +275,10 @@ public void TeleportView_OnThink(SaxtonHaleBase boss)
     
     TF2_AddCondition(boss.iClient, TFCond_FreezeInput, 3.0);
     TF2_AddCondition(boss.iClient, TFCond_UberchargedCanteen, 3.0);
+
+    // Get Radius Around Boss position.
+    // Get Clients in Radius.
+    // Set Bomb on head.
   }
   
   //Show where to teleport

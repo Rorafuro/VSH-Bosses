@@ -102,7 +102,7 @@ public void Horsemann_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 public void Horsemann_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 264 ; 0.73 ; 551 ; 1 ; 812 ; 2.0 ; 68 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 264 ; 0.73 ; 551 ; 1 ; 812 ; 2.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 266, "tf_weapon_sword", 100, TFQual_Unusual, attribs);
 
   if (iWeapon > MaxClients)
@@ -114,8 +114,7 @@ public void Horsemann_OnSpawn(SaxtonHaleBase boss)
   Horseless Headless Horsemann's Headtaker attributes:
   
   2: damage bonus
-  252: reduction in push force taken from damage (252 ; 0.33)
-  259: Deals 3x falling damage to the player you land on
+  252: reduction in push force taken from damage
   436: ragdolls_plasma_effect
   264: melee range multiplier (tf_weapon_sword have 37% extra range)
   551: special taunt

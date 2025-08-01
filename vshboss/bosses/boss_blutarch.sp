@@ -89,12 +89,12 @@ public void Blutarch_GetSound(SaxtonHaleBase boss, char[] sSound, int length, Sa
 {
   switch (iSoundType)
   {
-    case VSHSound_Win: strcopy(sSound, length, g_strBlutarchWin[GetRandomInt(0,sizeof(g_strBlutarchWin)-1)]);
-    case VSHSound_Lose: strcopy(sSound, length, g_strBlutarchLose[GetRandomInt(0,sizeof(g_strBlutarchLose)-1)]);
-    case VSHSound_Rage: strcopy(sSound, length, g_strBlutarchRage[GetRandomInt(0,sizeof(g_strBlutarchRage)-1)]);
-    case VSHSound_Lastman: strcopy(sSound, length, g_strBlutarchLastMan[GetRandomInt(0,sizeof(g_strBlutarchLastMan)-1)]);
+    case VSHSound_Win:      strcopy(sSound, length, g_strBlutarchWin[GetRandomInt(0,sizeof(g_strBlutarchWin)-1)]);
+    case VSHSound_Lose:     strcopy(sSound, length, g_strBlutarchLose[GetRandomInt(0,sizeof(g_strBlutarchLose)-1)]);
+    case VSHSound_Rage:     strcopy(sSound, length, g_strBlutarchRage[GetRandomInt(0,sizeof(g_strBlutarchRage)-1)]);
+    case VSHSound_Lastman:  strcopy(sSound, length, g_strBlutarchLastMan[GetRandomInt(0,sizeof(g_strBlutarchLastMan)-1)]);
     case VSHSound_Backstab: strcopy(sSound, length, g_strBlutarchBackstabbed[GetRandomInt(0,sizeof(g_strBlutarchBackstabbed)-1)]);
-    case VSHSound_Death: strcopy(sSound, length, g_strBlutarchDeath[GetRandomInt(0,sizeof(g_strBlutarchDeath)-1)]);
+    case VSHSound_Death:    strcopy(sSound, length, g_strBlutarchDeath[GetRandomInt(0,sizeof(g_strBlutarchDeath)-1)]);
   }
 }
 

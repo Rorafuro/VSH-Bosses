@@ -13,7 +13,6 @@ public void BodyEat_Create(SaxtonHaleBase boss)
 
 public void BodyEat_OnPlayerKilled(SaxtonHaleBase boss, Event event, int iVictim)
 {
-  PrintToServer("PLAYERD DIED");
 	if (g_bBodyBlockRagdoll) return;
 	if (!SaxtonHale_IsValidAttack(iVictim)) return;
 	

@@ -27,7 +27,8 @@ public void GroundPound_OnThink(SaxtonHaleBase boss)
   {
     if (g_bClientBossWeighDownForce[boss.iClient])
     {
-      SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) / boss.GetPropFloat("GroundPound", "GravityMultiplier"));
+      SetEntityGravity(boss.iClient, 1.0);
+      //SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) / boss.GetPropFloat("GroundPound", "GravityMultiplier"));
       TF2_RemoveCondition(boss.iClient, TFCond_SpeedBuffAlly);
     }
     
@@ -99,7 +100,8 @@ public void GroundPound_OnButton(SaxtonHaleBase boss, int &buttons)
       //Enable weighdown
       g_bClientBossWeighDownForce[boss.iClient] = true;
       g_flClientBossWeighDownTimer[boss.iClient] = 0.0;
-      SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) * boss.GetPropFloat("GroundPound", "GravityMultiplier"));
+      SetEntityGravity(boss.iClient, 4.0);
+      //SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) * boss.GetPropFloat("GroundPound", "GravityMultiplier"));
       TF2_AddCondition(boss.iClient, TFCond_SpeedBuffAlly, TFCondDuration_Infinite);
 
       float flJumpCooldown = boss.GetPropFloat("GroundPound", "JumpCooldown");
@@ -129,7 +131,8 @@ public void GroundPound_Destroy(SaxtonHaleBase boss)
 {
   if (g_bClientBossWeighDownForce[boss.iClient])
   {
-    SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) / boss.GetPropFloat("GroundPound", "GravityMultiplier"));
+    SetEntityGravity(boss.iClient, 1.0);
+    //SetEntityGravity(boss.iClient, GetEntityGravity(boss.iClient) / boss.GetPropFloat("GroundPound", "GravityMultiplier"));
     TF2_RemoveCondition(boss.iClient, TFCond_SpeedBuffAlly);
   }
 }

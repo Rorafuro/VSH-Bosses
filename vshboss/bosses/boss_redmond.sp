@@ -107,12 +107,12 @@ public void Redmond_GetSound(SaxtonHaleBase boss, char[] sSound, int length, Sax
 {
   switch (iSoundType)
   {
-    case VSHSound_Win: strcopy(sSound, length, g_strRedmondWin[GetRandomInt(0,sizeof(g_strRedmondWin)-1)]);
-    case VSHSound_Lose: strcopy(sSound, length, g_strRedmondLose[GetRandomInt(0,sizeof(g_strRedmondLose)-1)]);
-    case VSHSound_Rage: strcopy(sSound, length, g_strRedmondRage[GetRandomInt(0,sizeof(g_strRedmondRage)-1)]);
-    case VSHSound_Lastman: strcopy(sSound, length, g_strRedmondLastMan[GetRandomInt(0,sizeof(g_strRedmondLastMan)-1)]);
+    case VSHSound_Win:      strcopy(sSound, length, g_strRedmondWin[GetRandomInt(0,sizeof(g_strRedmondWin)-1)]);
+    case VSHSound_Lose:     strcopy(sSound, length, g_strRedmondLose[GetRandomInt(0,sizeof(g_strRedmondLose)-1)]);
+    case VSHSound_Rage:     strcopy(sSound, length, g_strRedmondRage[GetRandomInt(0,sizeof(g_strRedmondRage)-1)]);
+    case VSHSound_Lastman:  strcopy(sSound, length, g_strRedmondLastMan[GetRandomInt(0,sizeof(g_strRedmondLastMan)-1)]);
     case VSHSound_Backstab: strcopy(sSound, length, g_strRedmondBackstabbed[GetRandomInt(0,sizeof(g_strRedmondBackstabbed)-1)]);
-    case VSHSound_Death: strcopy(sSound, length, g_strRedmondDeath[GetRandomInt(0,sizeof(g_strRedmondDeath)-1)]);
+    case VSHSound_Death:    strcopy(sSound, length, g_strRedmondDeath[GetRandomInt(0,sizeof(g_strRedmondDeath)-1)]);
   }
 }
   

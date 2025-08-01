@@ -128,6 +128,16 @@ enum
   DAMAGE_AIM,
 };
 
+enum
+{
+	DONT_BLEED = -1,
+	
+	BLOOD_COLOR_RED = 0,
+	BLOOD_COLOR_YELLOW,
+	BLOOD_COLOR_GREEN,
+	BLOOD_COLOR_MECH,
+};
+
 
 // TF2 Class names, ordered from TFClassType
 char g_strClassName[TFClassType][] = {
@@ -245,8 +255,8 @@ public void OnLibraryAdded(const char[] name)
     SaxtonHale_RegisterClass("BrutalSniper",          VSHClassType_Boss);
     SaxtonHale_RegisterClass("DemoPan",               VSHClassType_Boss);
     SaxtonHale_RegisterClass("DemoRobot",             VSHClassType_Boss);
-    SaxtonHale_RegisterClass("GentleSpy",             VSHClassType_Boss);
-    SaxtonHale_RegisterClass("GrayMann",              VSHClassType_Boss);
+    //SaxtonHale_RegisterClass("GentleSpy",             VSHClassType_Boss);
+    //SaxtonHale_RegisterClass("GrayMann",              VSHClassType_Boss);
     SaxtonHale_RegisterClass("Horsemann",             VSHClassType_Boss);
     SaxtonHale_RegisterClass("Merasmus",              VSHClassType_Boss);
     SaxtonHale_RegisterClass("PainisCupcake",         VSHClassType_Boss);
@@ -263,10 +273,11 @@ public void OnLibraryAdded(const char[] name)
     // Register minions
     SaxtonHale_RegisterClass("SeeldierMinion",        VSHClassType_Boss);
     SaxtonHale_RegisterClass("AnnouncerMinion",       VSHClassType_Boss);
-    SaxtonHale_RegisterClass("MinionRanger",          VSHClassType_Boss);
-    SaxtonHale_RegisterClass("GrayMannSoldierMinion", VSHClassType_Boss);
-    SaxtonHale_RegisterClass("GrayMannDemomanMinion", VSHClassType_Boss);
-    SaxtonHale_RegisterClass("GrayMannPyroMinion",    VSHClassType_Boss);
+    //SaxtonHale_RegisterClass("MinionRanger",          VSHClassType_Boss);
+    // Graymann seems to break server.
+    //SaxtonHale_RegisterClass("GrayMannSoldierMinion", VSHClassType_Boss);
+    //SaxtonHale_RegisterClass("GrayMannDemomanMinion", VSHClassType_Boss);
+    //SaxtonHale_RegisterClass("GrayMannPyroMinion",    VSHClassType_Boss);
     SaxtonHale_RegisterClass("Zombie",                VSHClassType_Boss);
 
 	  // Register ability

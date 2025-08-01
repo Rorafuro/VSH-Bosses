@@ -809,3 +809,526 @@ stock int FindStringIndex2(int tableidx, const char[] str)
 
   return INVALID_STRING_INDEX;
 }
+
+
+public Action RemoveEnt(Handle timer, any entid) {
+	int ent = EntRefToEntIndex(entid);
+	if( ent > 0 && IsValidEntity(ent) ) {
+		AcceptEntityInput(ent, "Kill");
+	}
+	return Plugin_Continue;
+}
+
+// particles.inc
+
+// Creates an env_sprite.
+//
+// @param origin			Origin of the Sprite.
+// @param modelIndex		Precached model index.
+// @param color				Color array (r, g, b, a).
+// @param scale				Scale (Note: many materials ignore a lower value than 0.25).
+// @param targetName		Targetname of the sprite.
+// @param parent			Entity Index of this sprite's parent in the movement hierarchy.
+// @param renderMode		Render mode (use the enum).
+// @param renderFx			Render fx (use the enum).
+// @param glowProxySize		Radius size of the glow when to be rendered, if inside a geometry. Ex: a block 2x2x2 units big, if the glowProxySize is between 0.0 and 2.0 the sprite will not be rendered, even if the actual size of the sprite is bigger, everything above 2.0 will render the sprite. Using an abnormal high value will render Sprites trough walls.
+// @param frameRate			Sprite frame rate.
+// @param hdrColorScale 	Float value to multiply sprite color by when running with HDR.
+// @param receiveShadows	When false then this prevents the sprite from receiving shadows.
+// @return					Entity Index of the created Sprite.
+//
+stock int Effect_EnvSprite(
+    const float origin[3], int modelIndex, const int color[4]={255, 255, 255, 255},
+	float scale=0.25, const char targetName[MAX_NAME_LENGTH]="", int parent=-1, RenderMode renderMode=RENDER_WORLDGLOW,
+	RenderFx renderFx=RENDERFX_NONE, float glowProxySize=2.0, float framerate=10.0, float hdrColorScale=1.0,
+	bool receiveShadows = true) 
+{
+	int entity = Entity_Create("env_sprite");
+
+	if( entity==INVALID_ENT_REFERENCE ) {
+		return INVALID_ENT_REFERENCE;
+	}
+
+	DispatchKeyValue      (entity, "disablereceiveshadows", (receiveShadows) ? "0" : "1");
+	DispatchKeyValueFloat (entity, "framerate", framerate);
+	DispatchKeyValueFloat (entity, "GlowProxySize", glowProxySize);
+	DispatchKeyValue      (entity, "spawnflags", "1");
+	DispatchKeyValueFloat (entity, "HDRColorScale", hdrColorScale);
+	DispatchKeyValue      (entity, "maxdxlevel", "0");
+	DispatchKeyValue      (entity, "mindxlevel", "0");
+	DispatchKeyValueFloat (entity, "scale", scale);
+
+	DispatchSpawn(entity);
+
+	SetEntityRenderMode(entity, renderMode);
+	SetEntityRenderColor(entity, color[0], color[1], color[2], color[3]);
+	SetEntityRenderFx(entity, renderFx);
+
+	Entity_SetName(entity, targetName);
+	Entity_SetModelIndex(entity, modelIndex);
+	Entity_SetAbsOrigin(entity, origin);
+
+	if( parent != -1 ) {
+		Entity_SetParent(entity, parent);
+	}
+	return entity;
+}
+
+// Attach particle to entity.
+//
+// @param ent				Entity index.
+// @param particleType		Particle name.
+// @param offset			Offset of particle.
+// @param battach			Is particle attached.
+// @return
+//
+stock int AttachParticle(const int ent, const char[] particleType, float offset = 0.0, bool battach = true, float cleanup_timer = 2.0) {
+	int particle = CreateEntityByName("info_particle_system");
+	char tName[32];
+	float pos[3]; GetEntPropVector(ent, Prop_Send, "m_vecOrigin", pos);
+	pos[2] += offset;
+	TeleportEntity(particle, pos, NULL_VECTOR, NULL_VECTOR);
+	Format(tName, sizeof(tName), "target%i", ent);
+	DispatchKeyValue(ent, "targetname", tName);
+	DispatchKeyValue(particle, "targetname", "tf2particle");
+	DispatchKeyValue(particle, "parentname", tName);
+	DispatchKeyValue(particle, "effect_name", particleType);
+	DispatchSpawn(particle);
+	SetVariantString(tName);
+	if( battach ) {
+		AcceptEntityInput(particle, "SetParent", particle, particle, 0);
+		SetEntPropEnt(particle, Prop_Send, "m_hOwnerEntity", ent);
+	}
+	ActivateEntity(particle);
+	AcceptEntityInput(particle, "start");
+	CreateTimer(cleanup_timer, RemoveEnt, EntIndexToEntRef(particle));
+	return particle;
+}
+
+// Attach particle to entity.
+//
+// @param particlename		Particle name.
+// @param Pos		        Position of particle.
+// @param time			    Duration
+// @return
+//
+stock void CreateParticles(char[] particlename, float Pos[3] = NULL_VECTOR, float time) {
+	int particle = CreateEntityByName("info_particle_system");
+	if( IsValidEntity(particle) ) {
+		DispatchKeyValue(particle, "effect_name", particlename);
+		ActivateEntity(particle);
+		AcceptEntityInput(particle, "start");
+		TeleportEntity(particle, Pos, NULL_VECTOR, NULL_VECTOR);
+		CreateTimer(time, RemoveEnt, EntIndexToEntRef(particle));
+	} else {
+		LogError("CreateParticles: **** Couldn't Create 'info_particle_system Entity' ****");
+	}
+}
+
+stock void CreateParticle(char[] particle, int iEntity)
+{
+	int tblidx = FindStringTable("ParticleEffectNames");
+	char tmp[256];
+	int count = GetStringTableNumStrings(tblidx);
+	int stridx = INVALID_STRING_INDEX;
+	
+	for(int i = 0; i < count; i++)
+	{
+		ReadStringTable(tblidx, i, tmp, sizeof(tmp));
+		if(StrEqual(tmp, particle, false))
+		{
+			stridx = i;
+			break;
+		}
+	}
+	
+	float vPos[3], vAng[3];
+	GetEntPropVector(iEntity, Prop_Data, "m_vecAbsOrigin", vPos);
+	GetEntPropVector(iEntity, Prop_Data, "m_angRotation", vAng);
+	
+	TE_Start("TFParticleEffect");
+	TE_WriteFloat("m_vecOrigin[0]", vPos[0]);
+	TE_WriteFloat("m_vecOrigin[1]", vPos[1]);
+	TE_WriteFloat("m_vecOrigin[2]", vPos[2]);
+	TE_WriteVector("m_vecAngles", vAng);
+	TE_WriteNum("m_iParticleSystemIndex", stridx);
+	TE_WriteNum("entindex", iEntity);
+	TE_WriteNum("m_iAttachType", 0);
+	TE_SendToAll();
+}
+
+
+
+// entity.inc
+
+/*
+ * Checks if an entity is valid and exists.
+ *
+ * @param entity		Entity Index.
+ * @return				True if the entity is valid, false otherwise.
+ */
+stock int Entity_IsValid(int entity) {
+	return IsValidEntity(entity);
+}
+
+/**
+ *  Creates an entity by classname.
+ *
+ * @param className			Classname String.
+ * @param ForceEdictIndex	Edict Index to use.
+ * @return 					Entity Index or INVALID_ENT_REFERENCE if the slot is already in use.
+ */
+stock int Entity_Create(const char[] className, int ForceEdictIndex=-1) {
+	if( ForceEdictIndex != -1 && Entity_IsValid(ForceEdictIndex) ) {
+		return INVALID_ENT_REFERENCE;
+	}
+	return CreateEntityByName(className, ForceEdictIndex);
+}
+
+/**
+ * Sets the Name of an entity.
+ *
+ * @param entity			Entity index.
+ * @param name				The name you want to give.
+ * @return					True on success, false otherwise.
+ */
+stock int Entity_SetName(int entity, const char[] name, any ...) {
+	char format[128];
+	VFormat(format, sizeof(format), name, 3);
+	return DispatchKeyValue(entity, "targetname", format);
+}
+
+/**
+ * Sets the model to a given entity.
+ * Be sure it has been precached.
+ * This is an alias for SetEntityModel()
+ *
+ * @param entity		Entity index
+ * @param model			Model name
+ * @noreturn
+ */
+stock void Entity_SetModel(int entity, const char[] model) {
+	SetEntityModel(entity, model);
+}
+
+/**
+ * Sets the entity's model index (must be precached)
+ *
+ * @param entity			Entity index.
+ * @param index				Model Index.
+ * @noreturn
+ */
+stock void Entity_SetModelIndex(int entity, int index) {
+	SetEntProp(entity, Prop_Data, "m_nModelIndex", index, 2);
+}
+
+/**
+ * Sets the Absolute Origin (position) of an entity.
+ *
+ * @param entity			Entity index.
+ * @param vec				3 dimensional vector array.
+ * @noreturn
+ */
+stock void Entity_SetAbsOrigin(int entity, const float vec[3]) {
+	// We use TeleportEntity to set the origin more safely
+	// Todo: Replace this with a call to UTIL_SetOrigin() or CBaseEntity::SetLocalOrigin()
+	TeleportEntity(entity, vec, NULL_VECTOR, NULL_VECTOR);
+}
+
+/*
+ * Sets the parent entity of an entity.
+ *
+ * @param entity		Entity Index.
+ * @param parentEntity	Entity Index of the new parent.
+ * @noreturn
+ */
+stock void Entity_SetParent(int entity, int parent) {
+	SetVariantString("!activator");
+	AcceptEntityInput(entity, "SetParent", parent);
+}
+
+// Timer.inc
+
+// Wrapper function for easily setting up non-repeating timers.
+//
+// @param func				Function pointer to call desired function when time elapses.
+// @param thinktime			time in seconds when timer function will be called.
+// @param param1			1st param for the call back function.
+// @param param2			2nd param for the call back function.
+// @noreturn
+//
+//
+// If you need to use this and your function uses 3 parameters, modify it if necessary.
+// BUG/GLITCH: For some strange reason, SetPawnTimer doesn't work when u attempt to callback stock functions, interesting...
+//
+stock void SetPawnTimer(Function func, float thinktime = 0.1, any param1 = -999, any param2 = -999) {
+	DataPack thinkpack = new DataPack();
+	thinkpack.WriteFunction(func);
+	thinkpack.WriteCell(param1);
+	thinkpack.WriteCell(param2);
+	CreateTimer(thinktime, DoThink, thinkpack, TIMER_DATA_HNDL_CLOSE);
+}
+public Action DoThink(Handle t, DataPack pack) {
+	pack.Reset();
+	Function fn = pack.ReadFunction();
+	Call_StartFunction(null, fn);
+
+	any param = pack.ReadCell();
+	if( param != -999 ) {
+		Call_PushCell(param);
+	}
+	param = pack.ReadCell();
+	if( param != -999 ) {
+		Call_PushCell(param);
+	}
+	Call_Finish();
+	return Plugin_Continue;
+}
+
+// annotations.inc
+// Define NULL_SOUND as an empty sound file.
+#if !defined NULL_SOUND
+	#define NULL_SOUND "vo/null.mp3"
+#endif
+
+// Object-oriented wrapper for TF2's `show_annotation` event.
+methodmap TFAnnotationEvent < Event {
+	public TFAnnotationEvent() {
+		TFAnnotationEvent event = view_as<TFAnnotationEvent>(CreateEvent("show_annotation"));
+		// kludge because we can't use `this` nor call methodmap functions in the body of the
+		// constructor method
+		__TFAnnotationEvent_InitDefaults(event);
+		return event;
+	}
+	property bool ShowEffect 
+	{
+		public get()                       { return this.GetBool("show_effect"); }
+		public set(bool bShowEffect)       { this.SetBool("show_effect", bShowEffect); }
+	}
+	property bool ShowDistance 
+	{
+		public get()                       { return this.GetBool("show_distance"); }
+		public set(bool bShowDistance)     { this.SetBool("show_distance", bShowDistance); }
+	}
+	property int VisibilityBits 
+	{
+		public get()                       { return this.GetInt("visibilityBitfield"); }
+		public set(int visibilityBitfield) { this.SetInt("visibilityBitfield", visibilityBitfield); }
+	}
+	property int FollowEntity 
+	{
+		public get()                       { return this.GetInt("follow_entindex"); }
+		public set(int entity)             { this.SetInt("follow_entindex", entity); }
+	}
+	property int ID 
+	{
+		public set(int id)                 { this.SetInt("id", id); }
+	}
+	property float Lifetime 
+	{
+		public set(float flLifetime)       { this.SetFloat("lifetime", flLifetime); }
+	}
+
+	public void SetClientVisibility(int client, bool bVisible = true) {
+		if( bVisible ) {
+			this.VisibilityBits |= 1 << client;
+		} else {
+			this.VisibilityBits &= ~(1 << client);
+		}
+	}
+
+	public void SetSound(const char[] sound) {
+		this.SetString("play_sound", sound);
+	}
+
+	public void SetPosition(const float vecPosition[3]) {
+		this.SetFloat("worldPosX", vecPosition[0]);
+		this.SetFloat("worldPosY", vecPosition[1]);
+		this.SetFloat("worldPosZ", vecPosition[2]);
+	}
+
+	public void SetNormal(const float vecNormal[3]) {
+		this.SetFloat("worldNormalX", vecNormal[0]);
+		this.SetFloat("worldNormalY", vecNormal[1]);
+		this.SetFloat("worldNormalZ", vecNormal[2]);
+	}
+
+	public void SetText(const char[] text) {
+		this.SetString("text", text);
+	}
+
+	public void GetText(char[] text, int maxlen) {
+		this.GetString("text", text, maxlen);
+	}
+}
+
+// Internal function to sets sane default values for an annotation event.  We could just call
+// the Event.Set* functions, but I wouldn't want to have to change those in multiple places if
+// the event properties ever change.
+static stock void __TFAnnotationEvent_InitDefaults(TFAnnotationEvent annotation) {
+	annotation.Lifetime = 5.0;
+	annotation.SetSound(NULL_SOUND);
+}
+
+// Hides an annotation by its ID.
+stock void TF2_HideAnnotation(int id) {
+	Event event = CreateEvent("hide_annotation");
+	if (event) {
+		event.SetInt("id", id);
+		event.Fire();
+	}
+}
+
+// Creates a basic annotation event for use with `TF2_ShowPositionalAnnotation` or
+// `TF2_ShowFollowerAnnotation`.
+//
+// @param client			Array of clients
+// @param numClients		Number of clients.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return	
+static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, int numClients,
+	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
+{
+	TFAnnotationEvent annotation = new TFAnnotationEvent();
+	
+	if( annotation ) {
+		int visbits;
+		for( int i=0; i<=numClients; i++ ) {
+			visbits |= 1 << clients[i];
+		}
+		annotation.VisibilityBits = visbits;
+		annotation.SetText(text);
+		annotation.ID = id;
+		annotation.SetSound(sound);
+		annotation.Lifetime = lifetime;
+	}
+	return annotation;
+}
+
+// Displays a positional annotation to a list of clients.
+//
+// @param clients			Array of clients.
+// @param numClients		Number of clients.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return	
+stock void TF2_ShowPositionalAnnotation(const int[] clients, int numClients,
+	const float vecPosition[3], const char[] text, int id = 0,
+	const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+{
+	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
+	if( annotation ) {
+		annotation.SetPosition(vecPosition);
+		annotation.Fire();
+	}
+}
+
+// Wrapper to display a positional annotation to one client.
+//
+// @param client			Client index.
+// @param vecPosition		Position.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return	
+stock void TF2_ShowPositionalAnnotationToClient(int client, const float vecPosition[3],
+	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+{
+	int clients[1];
+	clients[0] = client;
+	TF2_ShowPositionalAnnotation(clients, 1, vecPosition, text, id, sound, lifetime);
+}
+
+// Wrapper to display a positional annotation to all clients.
+//
+// @param vecPosition		Position.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return			
+stock void TF2_ShowPositionalAnnotationToAll(const float vecPosition[3], const char[] text,
+	int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+{
+	int[] clients = new int[MaxClients];
+	int total = 0;
+	
+	for( int i=1; i<=MaxClients; i++ ) {
+		if( IsClientInGame(i) ) {
+			clients[total++] = i;
+		}
+	}
+	if (!total) {
+		return;
+	}
+	TF2_ShowPositionalAnnotation(clients, total, vecPosition, text, id, sound, lifetime);
+}
+
+// Displays an entity-following annotation to a list of clients.
+//
+// @param clients			Client index.
+// @param numClients		Number of clients.
+// @param followEntity		Entity index.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return			
+stock void TF2_ShowFollowingAnnotation(const int[] clients, int numClients, int followEntity,
+	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+{
+	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
+	if( annotation ) {
+		annotation.FollowEntity = followEntity;
+		annotation.Fire();
+	}
+}
+
+// Wrapper to display an entity-following annotation to one client.
+//
+// @param client			Client index.
+// @param followEntity		Entity index.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return		
+stock void TF2_ShowFollowingAnnotationToClient(int client, int followEntity,
+	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
+{
+	int clients[1];
+	clients[0] = client;
+
+	TF2_ShowFollowingAnnotation(clients, 1, followEntity, text, id, sound, lifetime);
+}
+
+// Wrapper to display an entity-following annotation to all clients.
+//
+// @param followEntity		Entity index.
+// @param text				Text.
+// @param id				Annotation ID.
+// @param sound				Sound.
+// @param lifetime			Duration.
+// @return					
+stock void TF2_ShowFollowingAnnotationToAll(int followEntity, const char[] text, int id = 0,
+	const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+{
+	int[] clients = new int[MaxClients];
+	int total = 0;
+	
+	for( int i=1; i<=MaxClients; i++ ) {
+		if (IsClientInGame(i)) {
+			clients[total++] = i;
+		}
+	}
+	if( !total ) {
+		return;
+	}
+	TF2_ShowFollowingAnnotation(clients, total, followEntity, text, id, sound, lifetime);
+}

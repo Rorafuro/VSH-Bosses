@@ -86,6 +86,11 @@ static char g_strMerasmusBackStabbed[][] = {
 static int g_iMerasmusModelWand = -1;
 static int g_iMerasmusModelArms = -1;
 
+static int g_iBeamSprite = -1;
+static int g_iHaloSprite = -1;
+
+static int g_iEntity = -1;
+
 public void Merasmus_Create(SaxtonHaleBase boss)
 {
   boss.CreateClass("TeleportView");
@@ -99,12 +104,12 @@ public void Merasmus_Create(SaxtonHaleBase boss)
   boss.CreateClass("RageAddCond");
   boss.SetPropFloat("RageAddCond", "RageCondDuration", 8.0);
   boss.SetPropFloat("RageAddCond", "RageCondSuperRageMultiplier", 1.0);
-  RageAddCond_AddCond(boss, TFCond_UberchargedCanteen);	//Ubered while raged
+  RageAddCond_AddCond(boss, TFCond_UberchargedCanteen);	// Ubered while raged
   
-  boss.iHealthPerPlayer = 600;
+  boss.iHealthPerPlayer    = 600;
   boss.flHealthExponential = 1.05;
-  boss.nClass = TFClass_Sniper;
-  boss.iMaxRageDamage = 2500;
+  boss.nClass              = TFClass_Sniper;
+  boss.iMaxRageDamage      = 2500;
 }
 
 public void Merasmus_GetBossName(SaxtonHaleBase boss, char[] sName, int length)
@@ -130,7 +135,7 @@ public void Merasmus_GetBossInfo(SaxtonHaleBase boss, char[] sInfo, int length)
 public void Merasmus_OnSpawn(SaxtonHaleBase boss)
 {
   char attribs[128];
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 259 ; 1.0 ; 610 ; 2.0 ; 812 ; 2.0 ; 68 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 252 ; 0.5 ; 610 ; 2.0 ; 812 ; 2.0 ; 68 ; 2.0");
   int iWeapon = boss.CallFunction("CreateWeapon", 3, "tf_weapon_club", 666, TFQual_Haunted, attribs);
   if (iWeapon > MaxClients)
   {
@@ -151,7 +156,6 @@ public void Merasmus_OnSpawn(SaxtonHaleBase boss)
   
   2: damage bonus
   252: reduction in push force taken from damage (252 ; 0.2)
-  259: Deals 3x falling damage to the player you land on
   610: increased air control
   214: kill_eater
   68: 3x capture rate
@@ -194,13 +198,13 @@ public void Merasmus_GetSound(SaxtonHaleBase boss, char[] sSound, int length, Sa
 {
   switch (iSoundType)
   {
-    case VSHSound_RoundStart: strcopy(sSound, length, g_strMerasmusRoundStart[GetRandomInt(0,sizeof(g_strMerasmusRoundStart)-1)]);
-    case VSHSound_Win: strcopy(sSound, length, g_strMerasmusWin[GetRandomInt(0,sizeof(g_strMerasmusWin)-1)]);
-    case VSHSound_Lose: strcopy(sSound, length, g_strMerasmusLose[GetRandomInt(0,sizeof(g_strMerasmusLose)-1)]);
-    case VSHSound_Rage: strcopy(sSound, length, g_strMerasmusRage[GetRandomInt(0,sizeof(g_strMerasmusRage)-1)]);
+    case VSHSound_RoundStart:   strcopy(sSound, length, g_strMerasmusRoundStart[GetRandomInt(0,sizeof(g_strMerasmusRoundStart)-1)]);
+    case VSHSound_Win:          strcopy(sSound, length, g_strMerasmusWin[GetRandomInt(0,sizeof(g_strMerasmusWin)-1)]);
+    case VSHSound_Lose:         strcopy(sSound, length, g_strMerasmusLose[GetRandomInt(0,sizeof(g_strMerasmusLose)-1)]);
+    case VSHSound_Rage:         strcopy(sSound, length, g_strMerasmusRage[GetRandomInt(0,sizeof(g_strMerasmusRage)-1)]);
     case VSHSound_KillBuilding: strcopy(sSound, length, g_strMerasmusKillBuilding[GetRandomInt(0,sizeof(g_strMerasmusKillBuilding)-1)]);
-    case VSHSound_Lastman: strcopy(sSound, length, g_strMerasmusLastMan[GetRandomInt(0,sizeof(g_strMerasmusLastMan)-1)]);
-    case VSHSound_Backstab: strcopy(sSound, length, g_strMerasmusBackStabbed[GetRandomInt(0,sizeof(g_strMerasmusBackStabbed)-1)]);
+    case VSHSound_Lastman:      strcopy(sSound, length, g_strMerasmusLastMan[GetRandomInt(0,sizeof(g_strMerasmusLastMan)-1)]);
+    case VSHSound_Backstab:     strcopy(sSound, length, g_strMerasmusBackStabbed[GetRandomInt(0,sizeof(g_strMerasmusBackStabbed)-1)]);
   }
 }
 
@@ -208,15 +212,15 @@ public void Merasmus_GetSoundKill(SaxtonHaleBase boss, char[] sSound, int length
 {
   switch (nClass)
   {
-    case TFClass_Scout: strcopy(sSound, length, g_strMerasmusKillScout[GetRandomInt(0,sizeof(g_strMerasmusKillScout)-1)]);
-    case TFClass_Soldier: strcopy(sSound, length, g_strMerasmusKillSoldier[GetRandomInt(0,sizeof(g_strMerasmusKillSoldier)-1)]);
-    case TFClass_Pyro: strcopy(sSound, length, g_strMerasmusKillPyro[GetRandomInt(0,sizeof(g_strMerasmusKillPyro)-1)]);
-    case TFClass_DemoMan: strcopy(sSound, length, g_strMerasmusKillDemoman[GetRandomInt(0,sizeof(g_strMerasmusKillDemoman)-1)]);
-    case TFClass_Heavy: strcopy(sSound, length, g_strMerasmusKillHeavy[GetRandomInt(0,sizeof(g_strMerasmusKillHeavy)-1)]);
-    case TFClass_Engineer: strcopy(sSound, length, g_strMerasmusKillEngineer[GetRandomInt(0,sizeof(g_strMerasmusKillEngineer)-1)]);
-    case TFClass_Medic: strcopy(sSound, length, g_strMerasmusKillMedic[GetRandomInt(0,sizeof(g_strMerasmusKillMedic)-1)]);
-    case TFClass_Sniper: strcopy(sSound, length, g_strMerasmusKillSniper[GetRandomInt(0,sizeof(g_strMerasmusKillSniper)-1)]);
-    case TFClass_Spy: strcopy(sSound, length, g_strMerasmusKillSpy[GetRandomInt(0,sizeof(g_strMerasmusKillSpy)-1)]);
+    case TFClass_Scout:     strcopy(sSound, length, g_strMerasmusKillScout[GetRandomInt(0,sizeof(g_strMerasmusKillScout)-1)]);
+    case TFClass_Soldier:   strcopy(sSound, length, g_strMerasmusKillSoldier[GetRandomInt(0,sizeof(g_strMerasmusKillSoldier)-1)]);
+    case TFClass_Pyro:      strcopy(sSound, length, g_strMerasmusKillPyro[GetRandomInt(0,sizeof(g_strMerasmusKillPyro)-1)]);
+    case TFClass_DemoMan:   strcopy(sSound, length, g_strMerasmusKillDemoman[GetRandomInt(0,sizeof(g_strMerasmusKillDemoman)-1)]);
+    case TFClass_Heavy:     strcopy(sSound, length, g_strMerasmusKillHeavy[GetRandomInt(0,sizeof(g_strMerasmusKillHeavy)-1)]);
+    case TFClass_Engineer:  strcopy(sSound, length, g_strMerasmusKillEngineer[GetRandomInt(0,sizeof(g_strMerasmusKillEngineer)-1)]);
+    case TFClass_Medic:     strcopy(sSound, length, g_strMerasmusKillMedic[GetRandomInt(0,sizeof(g_strMerasmusKillMedic)-1)]);
+    case TFClass_Sniper:    strcopy(sSound, length, g_strMerasmusKillSniper[GetRandomInt(0,sizeof(g_strMerasmusKillSniper)-1)]);
+    case TFClass_Spy:       strcopy(sSound, length, g_strMerasmusKillSpy[GetRandomInt(0,sizeof(g_strMerasmusKillSpy)-1)]);
   }
 }
 
@@ -234,6 +238,18 @@ public Action Merasmus_OnSoundPlayed(SaxtonHaleBase boss, int clients[MAXPLAYERS
   return Plugin_Continue;
 }
 
+public Action Merasmus_OnRage(SaxtonHaleBase boss)
+{
+  float vPos[3], vAngles[3];
+  GetClientAbsOrigin(boss.iClient, vPos);
+  GetClientAbsAngles(boss.iClient, vAngles);
+
+  int iEffectDuration = 30;
+  bool bSpin = true;
+
+  g_iEntity = SpawnWheel(vPos, vAngles, iEffectDuration, bSpin);
+}
+
 public void Merasmus_GetMusicInfo(SaxtonHaleBase boss, char[] sSound, int length, float &time)
 {
   strcopy(sSound, length, MERASMUS_THEME);
@@ -242,10 +258,14 @@ public void Merasmus_GetMusicInfo(SaxtonHaleBase boss, char[] sSound, int length
 
 public void Merasmus_Precache(SaxtonHaleBase boss)
 {
+
   PrecacheModel(MERASMUS_MODEL);
   g_iMerasmusModelWand = PrecacheModel(MERASMUS_MODEL_WAND);
   g_iMerasmusModelArms = PrecacheModel(MERASMUS_MODEL_ARMS);
   
+  g_iBeamSprite = PrecacheModel("materials/sprites/laser.vmt");
+	g_iHaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+
   PrepareMusic(MERASMUS_THEME, false);
   
   for (int i = 0; i < sizeof(g_strMerasmusRoundStart); i++) PrecacheSound(g_strMerasmusRoundStart[i]);
@@ -282,4 +302,35 @@ public void Merasmus_Precache(SaxtonHaleBase boss)
   AddFileToDownloadsTable("models/player/vsh_rewrite/merasmus/c_merasmus_arms.vvd");
   AddFileToDownloadsTable("models/player/vsh_rewrite/merasmus/c_merasmus_arms.dx80.vtx");
   AddFileToDownloadsTable("models/player/vsh_rewrite/merasmus/c_merasmus_arms.dx90.vtx");
+}
+
+// Spawn Wheel Of Doom
+static int SpawnWheel(float vOrigin[3], float vAngles[3], int iDuration = 10, bool bSpin = true)
+{
+	if (g_iEntity == -1)
+	{
+		int iEntity = CreateEntityByName("wheel_of_doom");
+		TeleportEntity(iEntity, vOrigin, vAngles, NULL_VECTOR);
+
+		char sDuration[35];
+		Format(sDuration, sizeof(sDuration), "%i", iDuration);
+
+		DispatchKeyValue(iEntity, "targetname", "wod_wheel");
+		DispatchKeyValue(iEntity, "has_spiral", "1");
+		DispatchKeyValue(iEntity, "effect_duration", sDuration);
+		DispatchSpawn(iEntity);
+		ActivateEntity(iEntity);
+		if (bSpin)
+			AcceptEntityInput(iEntity, "Spin");
+
+		GetEntPropVector(iEntity, Prop_Data, "m_vecOrigin", vOrigin);
+		
+		int iRedColor[4] = {200, 25, 25, 255};
+		TE_SetupBeamRingPoint(vOrigin, 10.0, 150.0, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.6, 10.0, 0.5, iRedColor, 20, 0);
+		TE_SendToAll();
+		return iEntity;
+	}
+
+	AcceptEntityInput(g_iEntity, "Spin");
+	return g_iEntity;
 }

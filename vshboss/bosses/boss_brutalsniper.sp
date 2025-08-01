@@ -133,7 +133,7 @@ public void BrutalSniper_OnSpawn(SaxtonHaleBase boss)
   */
   
   g_iBrutalSniperWeaponCooldown[boss.iClient][0] = BRUTALSNIPER_MAXWEAPONS - 2;	//Kukri
-  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 259 ; 1.0 ; 812 ; 2.0 ; 68 ; 2.0");
+  Format(attribs, sizeof(attribs), "2 ; 3.0 ; 812 ; 2.0 ; 68 ; 2.0");
   iWeapon = boss.CallFunction("CreateWeapon", ITEM_KUKRI, "tf_weapon_club", 100, TFQual_Collectors, attribs);
   if (iWeapon > MaxClients)
     SetEntPropEnt(iClient, Prop_Send, "m_hActiveWeapon", iWeapon);
@@ -142,7 +142,6 @@ public void BrutalSniper_OnSpawn(SaxtonHaleBase boss)
   
   2: damage bonus. 150 dmg
   252: reduction in push force taken from damage (252 ; 0.5 )
-  259: Deals 3x falling damage to the player you land on
   812: aircontrol after blast jumping
   68: 3x capture rate
   */
