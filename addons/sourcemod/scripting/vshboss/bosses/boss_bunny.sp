@@ -60,6 +60,7 @@ static char g_strBunnyBackStabbed[][] = {
 };
 
 // Unused
+/*
 static char BunnySpree[][] = {
   "vo/demoman_gibberish05.mp3",
   "vo/demoman_gibberish06.mp3",
@@ -82,7 +83,7 @@ static char BunnyRandomVoice[][] = {
   "vo/burp06.mp3",
   "vo/burp07.mp3"
 };
-
+*/
 
 stock int AttachProjectileModel(const int entity, const char[] strModel, char[] strAnim = "") {
   if( !IsValidEntity(entity) ) {

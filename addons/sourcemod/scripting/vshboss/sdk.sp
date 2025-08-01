@@ -203,41 +203,41 @@ static bool LookupOffset(int &iOffset, const char[] sClass, const char[] sProp)
   return true;
 }
 
-void SDK_HookGiveNamedItem(int iClient)
-{
-  if (g_hHookGiveNamedItem && !g_bTF2Items)
-    g_iHookIdGiveNamedItem[iClient] = DHookEntity(g_hHookGiveNamedItem, false, iClient, Hook_GiveNamedItemRemoved, Hook_GiveNamedItem);
-}
+//void SDK_HookGiveNamedItem(int iClient)
+//{
+//  if (g_hHookGiveNamedItem && !g_bTF2Items)
+//    g_iHookIdGiveNamedItem[iClient] = DHookEntity(g_hHookGiveNamedItem, false, iClient, Hook_GiveNamedItemRemoved, Hook_GiveNamedItem);
+//}
 
-void SDK_UnhookGiveNamedItem(int iClient)
-{
-  if (g_iHookIdGiveNamedItem[iClient])
-  {
-    DHookRemoveHookID(g_iHookIdGiveNamedItem[iClient]);
-    g_iHookIdGiveNamedItem[iClient] = 0;	
-  }
-}
+//void SDK_UnhookGiveNamedItem(int iClient)
+//{
+//  if (g_iHookIdGiveNamedItem[iClient])
+//  {
+//    DHookRemoveHookID(g_iHookIdGiveNamedItem[iClient]);
+//    g_iHookIdGiveNamedItem[iClient] = 0;	
+//  }
+//}
 
-bool SDK_IsGiveNamedItemActive()
-{
-  for (int iClient = 1; iClient <= MaxClients; iClient++)
-    if (g_iHookIdGiveNamedItem[iClient])
-      return true;
-  
-  return false;
-}
+//bool SDK_IsGiveNamedItemActive()
+//{
+//  for (int iClient = 1; iClient <= MaxClients; iClient++)
+//    if (g_iHookIdGiveNamedItem[iClient])
+//      return true;
+//  
+//  return false;
+//}
 
-void SDK_HookGetCaptureValueForPlayer(DHookCallback callback)
-{
-  if (g_hHookGetCaptureValueForPlayer)
-    DHookGamerules(g_hHookGetCaptureValueForPlayer, true, _, callback);
-}
+//void SDK_HookGetCaptureValueForPlayer(DHookCallback callback)
+//{
+//  if (g_hHookGetCaptureValueForPlayer)
+//    DHookGamerules(g_hHookGetCaptureValueForPlayer, true, _, callback);
+//}
 
-void SDK_HookGetMaxHealth(int iClient)
-{
-  if (g_hHookGetMaxHealth)
-    DHookEntity(g_hHookGetMaxHealth, false, iClient);
-}
+//void SDK_HookGetMaxHealth(int iClient)
+//{
+// if (g_hHookGetMaxHealth)
+//    DHookEntity(g_hHookGetMaxHealth, false, iClient);
+//}
 
 void SDK_AlwaysTransmitEntity(int iEntity)
 {
@@ -337,24 +337,24 @@ public MRESReturn Hook_CouldHealTarget(int iDispenser, Handle hReturn, Handle hP
   return MRES_Ignored;
 }
 
-void SDK_FVisible(int iEntity)
-{
-  if (g_hHookFVisible != null)
-    DHookEntity(g_hHookFVisible, false, iEntity, _, Hook_FVisible);
-}
+//void SDK_FVisible(int iEntity)
+//{
+//  if (g_hHookFVisible != null)
+//    DHookEntity(g_hHookFVisible, false, iEntity, _, Hook_FVisible);
+//}
 
-MRESReturn Hook_FVisible(int iEntity, DHookReturn ret)
-{
-  // This might fix weapons sometimes not being given out to players
-  ret.Value = true;
-  return MRES_Supercede;
-}
+//MRESReturn Hook_FVisible(int iEntity, DHookReturn ret)
+//{
+//  // This might fix weapons sometimes not being given out to players
+//  ret.Value = true;
+//  return MRES_Supercede;
+//}
 
-void SDK_SendWeaponAnim(int weapon, int anim)
-{
-  if (g_hSDKSendWeaponAnim != null)
-    SDKCall(g_hSDKSendWeaponAnim, weapon, anim);
-}
+//void SDK_SendWeaponAnim(int weapon, int anim)
+//{
+//  if (g_hSDKSendWeaponAnim != null)
+//    SDKCall(g_hSDKSendWeaponAnim, weapon, anim);
+//}
 
 bool SDKCall_PlaySpecificSequence(int iClient, const char[] sAnimationName)
 {
@@ -406,10 +406,10 @@ void SDK_RemoveObject(int iClient, int iEntity)
     SDKCall(g_hSDKRemoveObject, iClient, iEntity);
 }
 
-void SDK_TossJarThink(int iEntity)
-{
-  SDKCall(g_hSDKTossJarThink, iEntity);
-}
+//void SDK_TossJarThink(int iEntity)
+//{
+//  SDKCall(g_hSDKTossJarThink, iEntity);
+//}
 
 void SDK_SetFuseTime(int iEntity, float flTime)
 {

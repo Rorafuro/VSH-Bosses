@@ -238,17 +238,17 @@ public Action Merasmus_OnSoundPlayed(SaxtonHaleBase boss, int clients[MAXPLAYERS
   return Plugin_Continue;
 }
 
-public Action Merasmus_OnRage(SaxtonHaleBase boss)
-{
-  float vPos[3], vAngles[3];
-  GetClientAbsOrigin(boss.iClient, vPos);
-  GetClientAbsAngles(boss.iClient, vAngles);
-
-  int iEffectDuration = 30;
-  bool bSpin = true;
-
-  g_iEntity = SpawnWheel(vPos, vAngles, iEffectDuration, bSpin);
-}
+//public Action Merasmus_OnRage(SaxtonHaleBase boss)
+//{
+//  float vPos[3], vAngles[3];
+//  GetClientAbsOrigin(boss.iClient, vPos);
+//  GetClientAbsAngles(boss.iClient, vAngles);
+//
+//  int iEffectDuration = 30;
+//  bool bSpin = true;
+//
+//  g_iEntity = SpawnWheel(vPos, vAngles, iEffectDuration, bSpin);
+//}
 
 public void Merasmus_GetMusicInfo(SaxtonHaleBase boss, char[] sSound, int length, float &time)
 {
@@ -304,6 +304,7 @@ public void Merasmus_Precache(SaxtonHaleBase boss)
   AddFileToDownloadsTable("models/player/vsh_rewrite/merasmus/c_merasmus_arms.dx90.vtx");
 }
 
+/*
 // Spawn Wheel Of Doom
 static int SpawnWheel(float vOrigin[3], float vAngles[3], int iDuration = 10, bool bSpin = true)
 {
@@ -334,3 +335,4 @@ static int SpawnWheel(float vOrigin[3], float vAngles[3], int iDuration = 10, bo
   AcceptEntityInput(g_iEntity, "Spin");
   return g_iEntity;
 }
+*/
