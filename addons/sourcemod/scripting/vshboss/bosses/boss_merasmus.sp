@@ -86,8 +86,8 @@ static char g_strMerasmusBackStabbed[][] = {
 static int g_iMerasmusModelWand = -1;
 static int g_iMerasmusModelArms = -1;
 
-static int g_iBeamSprite = -1;
-static int g_iHaloSprite = -1;
+//static int g_iBeamSprite = -1;
+//static int g_iHaloSprite = -1;
 
 static int g_iEntity = -1;
 
@@ -263,8 +263,8 @@ public void Merasmus_Precache(SaxtonHaleBase boss)
   g_iMerasmusModelWand = PrecacheModel(MERASMUS_MODEL_WAND);
   g_iMerasmusModelArms = PrecacheModel(MERASMUS_MODEL_ARMS);
   
-  g_iBeamSprite = PrecacheModel("materials/sprites/laser.vmt");
-  g_iHaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+  //g_iBeamSprite = PrecacheModel("materials/sprites/laser.vmt");
+  //g_iHaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
 
   PrepareMusic(MERASMUS_THEME, false);
   

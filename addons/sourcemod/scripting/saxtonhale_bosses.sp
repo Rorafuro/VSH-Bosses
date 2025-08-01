@@ -162,7 +162,7 @@ char g_strBuildingName[TFObjectType][TFObjectMode][] = {
   {"Sapper", ""},
 };
 
-bool g_bTF2Items;
+//bool g_bTF2Items;
 
 int g_iSpritesLaserbeam;
 int g_iSpritesGlow;
@@ -227,7 +227,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
   // OnLibraryAdded dont always call TF2Items on plugin start
-  g_bTF2Items = LibraryExists("TF2Items");
+  //g_bTF2Items = LibraryExists("TF2Items");
 
   SDK_Init();
 }
