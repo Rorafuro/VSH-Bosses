@@ -209,7 +209,7 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
 
       // Create Delayed Vortex Entrance.
       GetClientAbsOrigin(iClient[0], gl_flVortexPos);
-      CreateTimer(2.0, Timer_VortexEntrance, TIMER_FLAG_NO_MAPCHANGE);
+      CreateTimer(2.0, Timer_VortexEntrance, _, TIMER_FLAG_NO_MAPCHANGE);
 
       // Spawn Clients
       TF2_TeleportSwap(iClient);
