@@ -264,7 +264,7 @@ public void Merasmus_Precache(SaxtonHaleBase boss)
   g_iMerasmusModelArms = PrecacheModel(MERASMUS_MODEL_ARMS);
   
   g_iBeamSprite = PrecacheModel("materials/sprites/laser.vmt");
-	g_iHaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
+  g_iHaloSprite = PrecacheModel("materials/sprites/halo01.vmt");
 
   PrepareMusic(MERASMUS_THEME, false);
   
@@ -307,30 +307,30 @@ public void Merasmus_Precache(SaxtonHaleBase boss)
 // Spawn Wheel Of Doom
 static int SpawnWheel(float vOrigin[3], float vAngles[3], int iDuration = 10, bool bSpin = true)
 {
-	if (g_iEntity == -1)
-	{
-		int iEntity = CreateEntityByName("wheel_of_doom");
-		TeleportEntity(iEntity, vOrigin, vAngles, NULL_VECTOR);
+  if (g_iEntity == -1)
+  {
+    int iEntity = CreateEntityByName("wheel_of_doom");
+    TeleportEntity(iEntity, vOrigin, vAngles, NULL_VECTOR);
 
-		char sDuration[35];
-		Format(sDuration, sizeof(sDuration), "%i", iDuration);
+    char sDuration[35];
+    Format(sDuration, sizeof(sDuration), "%i", iDuration);
 
-		DispatchKeyValue(iEntity, "targetname", "wod_wheel");
-		DispatchKeyValue(iEntity, "has_spiral", "1");
-		DispatchKeyValue(iEntity, "effect_duration", sDuration);
-		DispatchSpawn(iEntity);
-		ActivateEntity(iEntity);
-		if (bSpin)
-			AcceptEntityInput(iEntity, "Spin");
+    DispatchKeyValue(iEntity, "targetname", "wod_wheel");
+    DispatchKeyValue(iEntity, "has_spiral", "1");
+    DispatchKeyValue(iEntity, "effect_duration", sDuration);
+    DispatchSpawn(iEntity);
+    ActivateEntity(iEntity);
+    if (bSpin)
+      AcceptEntityInput(iEntity, "Spin");
 
-		GetEntPropVector(iEntity, Prop_Data, "m_vecOrigin", vOrigin);
-		
-		int iRedColor[4] = {200, 25, 25, 255};
-		TE_SetupBeamRingPoint(vOrigin, 10.0, 150.0, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.6, 10.0, 0.5, iRedColor, 20, 0);
-		TE_SendToAll();
-		return iEntity;
-	}
+    GetEntPropVector(iEntity, Prop_Data, "m_vecOrigin", vOrigin);
+    
+    int iRedColor[4] = {200, 25, 25, 255};
+    TE_SetupBeamRingPoint(vOrigin, 10.0, 150.0, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.6, 10.0, 0.5, iRedColor, 20, 0);
+    TE_SendToAll();
+    return iEntity;
+  }
 
-	AcceptEntityInput(g_iEntity, "Spin");
-	return g_iEntity;
+  AcceptEntityInput(g_iEntity, "Spin");
+  return g_iEntity;
 }

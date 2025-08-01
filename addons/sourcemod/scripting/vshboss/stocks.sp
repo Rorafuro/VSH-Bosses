@@ -390,7 +390,7 @@ stock ArrayList GetValidSummonableClients(bool bAllowBoss = false)
     if (IsClientInGame(iClient)
       && TF2_GetClientTeam(iClient) > TFTeam_Spectator
       && !IsPlayerAlive(iClient)
-			&& SaxtonHale_HasPreferences(iClient, VSHPreferences_Revival))
+      && SaxtonHale_HasPreferences(iClient, VSHPreferences_Revival))
     {
       if (!bAllowBoss)
         if (SaxtonHale_IsValidBoss(iClient, false)) continue;
@@ -684,59 +684,59 @@ stock void ConstrainDistance(const float vecStart[3], float vecEnd[3], float flD
 
 stock void SetEntityModelScale(int iEntity, float flScale, int iActivator = -1, int iCaller = -1)
 {
-	// SetModelScale errors out when using a float instead of a string, so it looks odd
-	char sScale[16];
-	FloatToString(flScale, sScale, sizeof(sScale));
-	
-	SetVariantString(sScale);
-	AcceptEntityInput(iEntity, "SetModelScale", iActivator, iCaller);
+  // SetModelScale errors out when using a float instead of a string, so it looks odd
+  char sScale[16];
+  FloatToString(flScale, sScale, sizeof(sScale));
+  
+  SetVariantString(sScale);
+  AcceptEntityInput(iEntity, "SetModelScale", iActivator, iCaller);
 }
 
 stock void DelayNextWeaponAttack(int iWeapon, float flDelay)
 {
-	float flNextAttack = GetGameTime() + flDelay;
-	SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", flNextAttack);
-	SetEntPropFloat(iWeapon, Prop_Send, "m_flNextSecondaryAttack", flNextAttack);
+  float flNextAttack = GetGameTime() + flDelay;
+  SetEntPropFloat(iWeapon, Prop_Send, "m_flNextPrimaryAttack", flNextAttack);
+  SetEntPropFloat(iWeapon, Prop_Send, "m_flNextSecondaryAttack", flNextAttack);
 }
 
 
 // Helper functions.
 stock bool CheckDownload(const char[] file)
 {
-	if (FileExists(file, true)) {
-		AddFileToDownloadsTable(file);
-		return true;
-	}
-	return false;
+  if (FileExists(file, true)) {
+    AddFileToDownloadsTable(file);
+    return true;
+  }
+  return false;
 }
 
 stock void DownloadMaterialList(const char[][] file_list, int size)
 {
-	char s[PLATFORM_MAX_PATH];
-	for(int i; i < size; i++) {
-		strcopy(s, sizeof(s), file_list[i]);
-		CheckDownload(s);
-	}
+  char s[PLATFORM_MAX_PATH];
+  for(int i; i < size; i++) {
+    strcopy(s, sizeof(s), file_list[i]);
+    CheckDownload(s);
+  }
 }
 
 /// For custom models, do NOT omit .MDL extension
 stock int PrepareModel(const char[] model_path, bool model_only=false)
 {
-	char extensions[][] = { ".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd", ".phy" };
-	char model_base[PLATFORM_MAX_PATH];
-	char path[PLATFORM_MAX_PATH];
-	
-	strcopy(model_base, sizeof(model_base), model_path);
-	SplitString(model_base, ".mdl", model_base, sizeof(model_base)); /// Kind of redundant, but eh.
-	if( !model_only ) {
-		for( int i; i<sizeof(extensions); i++ ) {
-			Format(path, PLATFORM_MAX_PATH, "%s%s", model_base, extensions[i]);
-			CheckDownload(path);
-		}
-	} else {
-		CheckDownload(model_path);
-	}
-	return PrecacheModel(model_path, true);
+  char extensions[][] = { ".mdl", ".dx80.vtx", ".dx90.vtx", ".sw.vtx", ".vvd", ".phy" };
+  char model_base[PLATFORM_MAX_PATH];
+  char path[PLATFORM_MAX_PATH];
+  
+  strcopy(model_base, sizeof(model_base), model_path);
+  SplitString(model_base, ".mdl", model_base, sizeof(model_base)); /// Kind of redundant, but eh.
+  if( !model_only ) {
+    for( int i; i<sizeof(extensions); i++ ) {
+      Format(path, PLATFORM_MAX_PATH, "%s%s", model_base, extensions[i]);
+      CheckDownload(path);
+    }
+  } else {
+    CheckDownload(model_path);
+  }
+  return PrecacheModel(model_path, true);
 }
 
 
@@ -812,11 +812,11 @@ stock int FindStringIndex2(int tableidx, const char[] str)
 
 
 public Action RemoveEnt(Handle timer, any entid) {
-	int ent = EntRefToEntIndex(entid);
-	if( ent > 0 && IsValidEntity(ent) ) {
-		AcceptEntityInput(ent, "Kill");
-	}
-	return Plugin_Continue;
+  int ent = EntRefToEntIndex(entid);
+  if( ent > 0 && IsValidEntity(ent) ) {
+    AcceptEntityInput(ent, "Kill");
+  }
+  return Plugin_Continue;
 }
 
 // particles.inc
@@ -839,39 +839,39 @@ public Action RemoveEnt(Handle timer, any entid) {
 //
 stock int Effect_EnvSprite(
     const float origin[3], int modelIndex, const int color[4]={255, 255, 255, 255},
-	float scale=0.25, const char targetName[MAX_NAME_LENGTH]="", int parent=-1, RenderMode renderMode=RENDER_WORLDGLOW,
-	RenderFx renderFx=RENDERFX_NONE, float glowProxySize=2.0, float framerate=10.0, float hdrColorScale=1.0,
-	bool receiveShadows = true) 
+  float scale=0.25, const char targetName[MAX_NAME_LENGTH]="", int parent=-1, RenderMode renderMode=RENDER_WORLDGLOW,
+  RenderFx renderFx=RENDERFX_NONE, float glowProxySize=2.0, float framerate=10.0, float hdrColorScale=1.0,
+  bool receiveShadows = true) 
 {
-	int entity = Entity_Create("env_sprite");
+  int entity = Entity_Create("env_sprite");
 
-	if( entity==INVALID_ENT_REFERENCE ) {
-		return INVALID_ENT_REFERENCE;
-	}
+  if( entity==INVALID_ENT_REFERENCE ) {
+    return INVALID_ENT_REFERENCE;
+  }
 
-	DispatchKeyValue      (entity, "disablereceiveshadows", (receiveShadows) ? "0" : "1");
-	DispatchKeyValueFloat (entity, "framerate", framerate);
-	DispatchKeyValueFloat (entity, "GlowProxySize", glowProxySize);
-	DispatchKeyValue      (entity, "spawnflags", "1");
-	DispatchKeyValueFloat (entity, "HDRColorScale", hdrColorScale);
-	DispatchKeyValue      (entity, "maxdxlevel", "0");
-	DispatchKeyValue      (entity, "mindxlevel", "0");
-	DispatchKeyValueFloat (entity, "scale", scale);
+  DispatchKeyValue      (entity, "disablereceiveshadows", (receiveShadows) ? "0" : "1");
+  DispatchKeyValueFloat (entity, "framerate", framerate);
+  DispatchKeyValueFloat (entity, "GlowProxySize", glowProxySize);
+  DispatchKeyValue      (entity, "spawnflags", "1");
+  DispatchKeyValueFloat (entity, "HDRColorScale", hdrColorScale);
+  DispatchKeyValue      (entity, "maxdxlevel", "0");
+  DispatchKeyValue      (entity, "mindxlevel", "0");
+  DispatchKeyValueFloat (entity, "scale", scale);
 
-	DispatchSpawn(entity);
+  DispatchSpawn(entity);
 
-	SetEntityRenderMode(entity, renderMode);
-	SetEntityRenderColor(entity, color[0], color[1], color[2], color[3]);
-	SetEntityRenderFx(entity, renderFx);
+  SetEntityRenderMode(entity, renderMode);
+  SetEntityRenderColor(entity, color[0], color[1], color[2], color[3]);
+  SetEntityRenderFx(entity, renderFx);
 
-	Entity_SetName(entity, targetName);
-	Entity_SetModelIndex(entity, modelIndex);
-	Entity_SetAbsOrigin(entity, origin);
+  Entity_SetName(entity, targetName);
+  Entity_SetModelIndex(entity, modelIndex);
+  Entity_SetAbsOrigin(entity, origin);
 
-	if( parent != -1 ) {
-		Entity_SetParent(entity, parent);
-	}
-	return entity;
+  if( parent != -1 ) {
+    Entity_SetParent(entity, parent);
+  }
+  return entity;
 }
 
 // Attach particle to entity.
@@ -883,26 +883,26 @@ stock int Effect_EnvSprite(
 // @return
 //
 stock int AttachParticle(const int ent, const char[] particleType, float offset = 0.0, bool battach = true, float cleanup_timer = 2.0) {
-	int particle = CreateEntityByName("info_particle_system");
-	char tName[32];
-	float pos[3]; GetEntPropVector(ent, Prop_Send, "m_vecOrigin", pos);
-	pos[2] += offset;
-	TeleportEntity(particle, pos, NULL_VECTOR, NULL_VECTOR);
-	Format(tName, sizeof(tName), "target%i", ent);
-	DispatchKeyValue(ent, "targetname", tName);
-	DispatchKeyValue(particle, "targetname", "tf2particle");
-	DispatchKeyValue(particle, "parentname", tName);
-	DispatchKeyValue(particle, "effect_name", particleType);
-	DispatchSpawn(particle);
-	SetVariantString(tName);
-	if( battach ) {
-		AcceptEntityInput(particle, "SetParent", particle, particle, 0);
-		SetEntPropEnt(particle, Prop_Send, "m_hOwnerEntity", ent);
-	}
-	ActivateEntity(particle);
-	AcceptEntityInput(particle, "start");
-	CreateTimer(cleanup_timer, RemoveEnt, EntIndexToEntRef(particle));
-	return particle;
+  int particle = CreateEntityByName("info_particle_system");
+  char tName[32];
+  float pos[3]; GetEntPropVector(ent, Prop_Send, "m_vecOrigin", pos);
+  pos[2] += offset;
+  TeleportEntity(particle, pos, NULL_VECTOR, NULL_VECTOR);
+  Format(tName, sizeof(tName), "target%i", ent);
+  DispatchKeyValue(ent, "targetname", tName);
+  DispatchKeyValue(particle, "targetname", "tf2particle");
+  DispatchKeyValue(particle, "parentname", tName);
+  DispatchKeyValue(particle, "effect_name", particleType);
+  DispatchSpawn(particle);
+  SetVariantString(tName);
+  if( battach ) {
+    AcceptEntityInput(particle, "SetParent", particle, particle, 0);
+    SetEntPropEnt(particle, Prop_Send, "m_hOwnerEntity", ent);
+  }
+  ActivateEntity(particle);
+  AcceptEntityInput(particle, "start");
+  CreateTimer(cleanup_timer, RemoveEnt, EntIndexToEntRef(particle));
+  return particle;
 }
 
 // Attach particle to entity.
@@ -913,48 +913,48 @@ stock int AttachParticle(const int ent, const char[] particleType, float offset 
 // @return
 //
 stock void CreateParticles(char[] particlename, float Pos[3] = NULL_VECTOR, float time) {
-	int particle = CreateEntityByName("info_particle_system");
-	if( IsValidEntity(particle) ) {
-		DispatchKeyValue(particle, "effect_name", particlename);
-		ActivateEntity(particle);
-		AcceptEntityInput(particle, "start");
-		TeleportEntity(particle, Pos, NULL_VECTOR, NULL_VECTOR);
-		CreateTimer(time, RemoveEnt, EntIndexToEntRef(particle));
-	} else {
-		LogError("CreateParticles: **** Couldn't Create 'info_particle_system Entity' ****");
-	}
+  int particle = CreateEntityByName("info_particle_system");
+  if( IsValidEntity(particle) ) {
+    DispatchKeyValue(particle, "effect_name", particlename);
+    ActivateEntity(particle);
+    AcceptEntityInput(particle, "start");
+    TeleportEntity(particle, Pos, NULL_VECTOR, NULL_VECTOR);
+    CreateTimer(time, RemoveEnt, EntIndexToEntRef(particle));
+  } else {
+    LogError("CreateParticles: **** Couldn't Create 'info_particle_system Entity' ****");
+  }
 }
 
 stock void CreateParticle(char[] particle, int iEntity)
 {
-	int tblidx = FindStringTable("ParticleEffectNames");
-	char tmp[256];
-	int count = GetStringTableNumStrings(tblidx);
-	int stridx = INVALID_STRING_INDEX;
-	
-	for(int i = 0; i < count; i++)
-	{
-		ReadStringTable(tblidx, i, tmp, sizeof(tmp));
-		if(StrEqual(tmp, particle, false))
-		{
-			stridx = i;
-			break;
-		}
-	}
-	
-	float vPos[3], vAng[3];
-	GetEntPropVector(iEntity, Prop_Data, "m_vecAbsOrigin", vPos);
-	GetEntPropVector(iEntity, Prop_Data, "m_angRotation", vAng);
-	
-	TE_Start("TFParticleEffect");
-	TE_WriteFloat("m_vecOrigin[0]", vPos[0]);
-	TE_WriteFloat("m_vecOrigin[1]", vPos[1]);
-	TE_WriteFloat("m_vecOrigin[2]", vPos[2]);
-	TE_WriteVector("m_vecAngles", vAng);
-	TE_WriteNum("m_iParticleSystemIndex", stridx);
-	TE_WriteNum("entindex", iEntity);
-	TE_WriteNum("m_iAttachType", 0);
-	TE_SendToAll();
+  int tblidx = FindStringTable("ParticleEffectNames");
+  char tmp[256];
+  int count = GetStringTableNumStrings(tblidx);
+  int stridx = INVALID_STRING_INDEX;
+  
+  for(int i = 0; i < count; i++)
+  {
+    ReadStringTable(tblidx, i, tmp, sizeof(tmp));
+    if(StrEqual(tmp, particle, false))
+    {
+      stridx = i;
+      break;
+    }
+  }
+  
+  float vPos[3], vAng[3];
+  GetEntPropVector(iEntity, Prop_Data, "m_vecAbsOrigin", vPos);
+  GetEntPropVector(iEntity, Prop_Data, "m_angRotation", vAng);
+  
+  TE_Start("TFParticleEffect");
+  TE_WriteFloat("m_vecOrigin[0]", vPos[0]);
+  TE_WriteFloat("m_vecOrigin[1]", vPos[1]);
+  TE_WriteFloat("m_vecOrigin[2]", vPos[2]);
+  TE_WriteVector("m_vecAngles", vAng);
+  TE_WriteNum("m_iParticleSystemIndex", stridx);
+  TE_WriteNum("entindex", iEntity);
+  TE_WriteNum("m_iAttachType", 0);
+  TE_SendToAll();
 }
 
 
@@ -968,7 +968,7 @@ stock void CreateParticle(char[] particle, int iEntity)
  * @return				True if the entity is valid, false otherwise.
  */
 stock int Entity_IsValid(int entity) {
-	return IsValidEntity(entity);
+  return IsValidEntity(entity);
 }
 
 /**
@@ -979,10 +979,10 @@ stock int Entity_IsValid(int entity) {
  * @return 					Entity Index or INVALID_ENT_REFERENCE if the slot is already in use.
  */
 stock int Entity_Create(const char[] className, int ForceEdictIndex=-1) {
-	if( ForceEdictIndex != -1 && Entity_IsValid(ForceEdictIndex) ) {
-		return INVALID_ENT_REFERENCE;
-	}
-	return CreateEntityByName(className, ForceEdictIndex);
+  if( ForceEdictIndex != -1 && Entity_IsValid(ForceEdictIndex) ) {
+    return INVALID_ENT_REFERENCE;
+  }
+  return CreateEntityByName(className, ForceEdictIndex);
 }
 
 /**
@@ -993,9 +993,9 @@ stock int Entity_Create(const char[] className, int ForceEdictIndex=-1) {
  * @return					True on success, false otherwise.
  */
 stock int Entity_SetName(int entity, const char[] name, any ...) {
-	char format[128];
-	VFormat(format, sizeof(format), name, 3);
-	return DispatchKeyValue(entity, "targetname", format);
+  char format[128];
+  VFormat(format, sizeof(format), name, 3);
+  return DispatchKeyValue(entity, "targetname", format);
 }
 
 /**
@@ -1008,7 +1008,7 @@ stock int Entity_SetName(int entity, const char[] name, any ...) {
  * @noreturn
  */
 stock void Entity_SetModel(int entity, const char[] model) {
-	SetEntityModel(entity, model);
+  SetEntityModel(entity, model);
 }
 
 /**
@@ -1019,7 +1019,7 @@ stock void Entity_SetModel(int entity, const char[] model) {
  * @noreturn
  */
 stock void Entity_SetModelIndex(int entity, int index) {
-	SetEntProp(entity, Prop_Data, "m_nModelIndex", index, 2);
+  SetEntProp(entity, Prop_Data, "m_nModelIndex", index, 2);
 }
 
 /**
@@ -1030,9 +1030,9 @@ stock void Entity_SetModelIndex(int entity, int index) {
  * @noreturn
  */
 stock void Entity_SetAbsOrigin(int entity, const float vec[3]) {
-	// We use TeleportEntity to set the origin more safely
-	// Todo: Replace this with a call to UTIL_SetOrigin() or CBaseEntity::SetLocalOrigin()
-	TeleportEntity(entity, vec, NULL_VECTOR, NULL_VECTOR);
+  // We use TeleportEntity to set the origin more safely
+  // Todo: Replace this with a call to UTIL_SetOrigin() or CBaseEntity::SetLocalOrigin()
+  TeleportEntity(entity, vec, NULL_VECTOR, NULL_VECTOR);
 }
 
 /*
@@ -1043,8 +1043,8 @@ stock void Entity_SetAbsOrigin(int entity, const float vec[3]) {
  * @noreturn
  */
 stock void Entity_SetParent(int entity, int parent) {
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", parent);
+  SetVariantString("!activator");
+  AcceptEntityInput(entity, "SetParent", parent);
 }
 
 // Timer.inc
@@ -1062,121 +1062,121 @@ stock void Entity_SetParent(int entity, int parent) {
 // BUG/GLITCH: For some strange reason, SetPawnTimer doesn't work when u attempt to callback stock functions, interesting...
 //
 stock void SetPawnTimer(Function func, float thinktime = 0.1, any param1 = -999, any param2 = -999) {
-	DataPack thinkpack = new DataPack();
-	thinkpack.WriteFunction(func);
-	thinkpack.WriteCell(param1);
-	thinkpack.WriteCell(param2);
-	CreateTimer(thinktime, DoThink, thinkpack, TIMER_DATA_HNDL_CLOSE);
+  DataPack thinkpack = new DataPack();
+  thinkpack.WriteFunction(func);
+  thinkpack.WriteCell(param1);
+  thinkpack.WriteCell(param2);
+  CreateTimer(thinktime, DoThink, thinkpack, TIMER_DATA_HNDL_CLOSE);
 }
 public Action DoThink(Handle t, DataPack pack) {
-	pack.Reset();
-	Function fn = pack.ReadFunction();
-	Call_StartFunction(null, fn);
+  pack.Reset();
+  Function fn = pack.ReadFunction();
+  Call_StartFunction(null, fn);
 
-	any param = pack.ReadCell();
-	if( param != -999 ) {
-		Call_PushCell(param);
-	}
-	param = pack.ReadCell();
-	if( param != -999 ) {
-		Call_PushCell(param);
-	}
-	Call_Finish();
-	return Plugin_Continue;
+  any param = pack.ReadCell();
+  if( param != -999 ) {
+    Call_PushCell(param);
+  }
+  param = pack.ReadCell();
+  if( param != -999 ) {
+    Call_PushCell(param);
+  }
+  Call_Finish();
+  return Plugin_Continue;
 }
 
 // annotations.inc
 // Define NULL_SOUND as an empty sound file.
 #if !defined NULL_SOUND
-	#define NULL_SOUND "vo/null.mp3"
+  #define NULL_SOUND "vo/null.mp3"
 #endif
 
 // Object-oriented wrapper for TF2's `show_annotation` event.
 methodmap TFAnnotationEvent < Event {
-	public TFAnnotationEvent() {
-		TFAnnotationEvent event = view_as<TFAnnotationEvent>(CreateEvent("show_annotation"));
-		// kludge because we can't use `this` nor call methodmap functions in the body of the
-		// constructor method
-		__TFAnnotationEvent_InitDefaults(event);
-		return event;
-	}
-	property bool ShowEffect 
-	{
-		public get()                       { return this.GetBool("show_effect"); }
-		public set(bool bShowEffect)       { this.SetBool("show_effect", bShowEffect); }
-	}
-	property bool ShowDistance 
-	{
-		public get()                       { return this.GetBool("show_distance"); }
-		public set(bool bShowDistance)     { this.SetBool("show_distance", bShowDistance); }
-	}
-	property int VisibilityBits 
-	{
-		public get()                       { return this.GetInt("visibilityBitfield"); }
-		public set(int visibilityBitfield) { this.SetInt("visibilityBitfield", visibilityBitfield); }
-	}
-	property int FollowEntity 
-	{
-		public get()                       { return this.GetInt("follow_entindex"); }
-		public set(int entity)             { this.SetInt("follow_entindex", entity); }
-	}
-	property int ID 
-	{
-		public set(int id)                 { this.SetInt("id", id); }
-	}
-	property float Lifetime 
-	{
-		public set(float flLifetime)       { this.SetFloat("lifetime", flLifetime); }
-	}
+  public TFAnnotationEvent() {
+    TFAnnotationEvent event = view_as<TFAnnotationEvent>(CreateEvent("show_annotation"));
+    // kludge because we can't use `this` nor call methodmap functions in the body of the
+    // constructor method
+    __TFAnnotationEvent_InitDefaults(event);
+    return event;
+  }
+  property bool ShowEffect 
+  {
+    public get()                       { return this.GetBool("show_effect"); }
+    public set(bool bShowEffect)       { this.SetBool("show_effect", bShowEffect); }
+  }
+  property bool ShowDistance 
+  {
+    public get()                       { return this.GetBool("show_distance"); }
+    public set(bool bShowDistance)     { this.SetBool("show_distance", bShowDistance); }
+  }
+  property int VisibilityBits 
+  {
+    public get()                       { return this.GetInt("visibilityBitfield"); }
+    public set(int visibilityBitfield) { this.SetInt("visibilityBitfield", visibilityBitfield); }
+  }
+  property int FollowEntity 
+  {
+    public get()                       { return this.GetInt("follow_entindex"); }
+    public set(int entity)             { this.SetInt("follow_entindex", entity); }
+  }
+  property int ID 
+  {
+    public set(int id)                 { this.SetInt("id", id); }
+  }
+  property float Lifetime 
+  {
+    public set(float flLifetime)       { this.SetFloat("lifetime", flLifetime); }
+  }
 
-	public void SetClientVisibility(int client, bool bVisible = true) {
-		if( bVisible ) {
-			this.VisibilityBits |= 1 << client;
-		} else {
-			this.VisibilityBits &= ~(1 << client);
-		}
-	}
+  public void SetClientVisibility(int client, bool bVisible = true) {
+    if( bVisible ) {
+      this.VisibilityBits |= 1 << client;
+    } else {
+      this.VisibilityBits &= ~(1 << client);
+    }
+  }
 
-	public void SetSound(const char[] sound) {
-		this.SetString("play_sound", sound);
-	}
+  public void SetSound(const char[] sound) {
+    this.SetString("play_sound", sound);
+  }
 
-	public void SetPosition(const float vecPosition[3]) {
-		this.SetFloat("worldPosX", vecPosition[0]);
-		this.SetFloat("worldPosY", vecPosition[1]);
-		this.SetFloat("worldPosZ", vecPosition[2]);
-	}
+  public void SetPosition(const float vecPosition[3]) {
+    this.SetFloat("worldPosX", vecPosition[0]);
+    this.SetFloat("worldPosY", vecPosition[1]);
+    this.SetFloat("worldPosZ", vecPosition[2]);
+  }
 
-	public void SetNormal(const float vecNormal[3]) {
-		this.SetFloat("worldNormalX", vecNormal[0]);
-		this.SetFloat("worldNormalY", vecNormal[1]);
-		this.SetFloat("worldNormalZ", vecNormal[2]);
-	}
+  public void SetNormal(const float vecNormal[3]) {
+    this.SetFloat("worldNormalX", vecNormal[0]);
+    this.SetFloat("worldNormalY", vecNormal[1]);
+    this.SetFloat("worldNormalZ", vecNormal[2]);
+  }
 
-	public void SetText(const char[] text) {
-		this.SetString("text", text);
-	}
+  public void SetText(const char[] text) {
+    this.SetString("text", text);
+  }
 
-	public void GetText(char[] text, int maxlen) {
-		this.GetString("text", text, maxlen);
-	}
+  public void GetText(char[] text, int maxlen) {
+    this.GetString("text", text, maxlen);
+  }
 }
 
 // Internal function to sets sane default values for an annotation event.  We could just call
 // the Event.Set* functions, but I wouldn't want to have to change those in multiple places if
 // the event properties ever change.
 static stock void __TFAnnotationEvent_InitDefaults(TFAnnotationEvent annotation) {
-	annotation.Lifetime = 5.0;
-	annotation.SetSound(NULL_SOUND);
+  annotation.Lifetime = 5.0;
+  annotation.SetSound(NULL_SOUND);
 }
 
 // Hides an annotation by its ID.
 stock void TF2_HideAnnotation(int id) {
-	Event event = CreateEvent("hide_annotation");
-	if (event) {
-		event.SetInt("id", id);
-		event.Fire();
-	}
+  Event event = CreateEvent("hide_annotation");
+  if (event) {
+    event.SetInt("id", id);
+    event.Fire();
+  }
 }
 
 // Creates a basic annotation event for use with `TF2_ShowPositionalAnnotation` or
@@ -1190,22 +1190,22 @@ stock void TF2_HideAnnotation(int id) {
 // @param lifetime			Duration.
 // @return	
 static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, int numClients,
-	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
+  const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
 {
-	TFAnnotationEvent annotation = new TFAnnotationEvent();
-	
-	if( annotation ) {
-		int visbits;
-		for( int i=0; i<=numClients; i++ ) {
-			visbits |= 1 << clients[i];
-		}
-		annotation.VisibilityBits = visbits;
-		annotation.SetText(text);
-		annotation.ID = id;
-		annotation.SetSound(sound);
-		annotation.Lifetime = lifetime;
-	}
-	return annotation;
+  TFAnnotationEvent annotation = new TFAnnotationEvent();
+  
+  if( annotation ) {
+    int visbits;
+    for( int i=0; i<=numClients; i++ ) {
+      visbits |= 1 << clients[i];
+    }
+    annotation.VisibilityBits = visbits;
+    annotation.SetText(text);
+    annotation.ID = id;
+    annotation.SetSound(sound);
+    annotation.Lifetime = lifetime;
+  }
+  return annotation;
 }
 
 // Displays a positional annotation to a list of clients.
@@ -1218,14 +1218,14 @@ static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, in
 // @param lifetime			Duration.
 // @return	
 stock void TF2_ShowPositionalAnnotation(const int[] clients, int numClients,
-	const float vecPosition[3], const char[] text, int id = 0,
-	const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+  const float vecPosition[3], const char[] text, int id = 0,
+  const char[] sound = NULL_SOUND, float lifetime = 5.0) 
 {
-	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
-	if( annotation ) {
-		annotation.SetPosition(vecPosition);
-		annotation.Fire();
-	}
+  TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
+  if( annotation ) {
+    annotation.SetPosition(vecPosition);
+    annotation.Fire();
+  }
 }
 
 // Wrapper to display a positional annotation to one client.
@@ -1238,11 +1238,11 @@ stock void TF2_ShowPositionalAnnotation(const int[] clients, int numClients,
 // @param lifetime			Duration.
 // @return	
 stock void TF2_ShowPositionalAnnotationToClient(int client, const float vecPosition[3],
-	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+  const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
 {
-	int clients[1];
-	clients[0] = client;
-	TF2_ShowPositionalAnnotation(clients, 1, vecPosition, text, id, sound, lifetime);
+  int clients[1];
+  clients[0] = client;
+  TF2_ShowPositionalAnnotation(clients, 1, vecPosition, text, id, sound, lifetime);
 }
 
 // Wrapper to display a positional annotation to all clients.
@@ -1254,20 +1254,20 @@ stock void TF2_ShowPositionalAnnotationToClient(int client, const float vecPosit
 // @param lifetime			Duration.
 // @return			
 stock void TF2_ShowPositionalAnnotationToAll(const float vecPosition[3], const char[] text,
-	int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+  int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
 {
-	int[] clients = new int[MaxClients];
-	int total = 0;
-	
-	for( int i=1; i<=MaxClients; i++ ) {
-		if( IsClientInGame(i) ) {
-			clients[total++] = i;
-		}
-	}
-	if (!total) {
-		return;
-	}
-	TF2_ShowPositionalAnnotation(clients, total, vecPosition, text, id, sound, lifetime);
+  int[] clients = new int[MaxClients];
+  int total = 0;
+  
+  for( int i=1; i<=MaxClients; i++ ) {
+    if( IsClientInGame(i) ) {
+      clients[total++] = i;
+    }
+  }
+  if (!total) {
+    return;
+  }
+  TF2_ShowPositionalAnnotation(clients, total, vecPosition, text, id, sound, lifetime);
 }
 
 // Displays an entity-following annotation to a list of clients.
@@ -1281,13 +1281,13 @@ stock void TF2_ShowPositionalAnnotationToAll(const float vecPosition[3], const c
 // @param lifetime			Duration.
 // @return			
 stock void TF2_ShowFollowingAnnotation(const int[] clients, int numClients, int followEntity,
-	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+  const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) 
 {
-	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
-	if( annotation ) {
-		annotation.FollowEntity = followEntity;
-		annotation.Fire();
-	}
+  TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id, sound, lifetime);
+  if( annotation ) {
+    annotation.FollowEntity = followEntity;
+    annotation.Fire();
+  }
 }
 
 // Wrapper to display an entity-following annotation to one client.
@@ -1300,12 +1300,12 @@ stock void TF2_ShowFollowingAnnotation(const int[] clients, int numClients, int 
 // @param lifetime			Duration.
 // @return		
 stock void TF2_ShowFollowingAnnotationToClient(int client, int followEntity,
-	const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
+  const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0)
 {
-	int clients[1];
-	clients[0] = client;
+  int clients[1];
+  clients[0] = client;
 
-	TF2_ShowFollowingAnnotation(clients, 1, followEntity, text, id, sound, lifetime);
+  TF2_ShowFollowingAnnotation(clients, 1, followEntity, text, id, sound, lifetime);
 }
 
 // Wrapper to display an entity-following annotation to all clients.
@@ -1317,18 +1317,18 @@ stock void TF2_ShowFollowingAnnotationToClient(int client, int followEntity,
 // @param lifetime			Duration.
 // @return					
 stock void TF2_ShowFollowingAnnotationToAll(int followEntity, const char[] text, int id = 0,
-	const char[] sound = NULL_SOUND, float lifetime = 5.0) 
+  const char[] sound = NULL_SOUND, float lifetime = 5.0) 
 {
-	int[] clients = new int[MaxClients];
-	int total = 0;
-	
-	for( int i=1; i<=MaxClients; i++ ) {
-		if (IsClientInGame(i)) {
-			clients[total++] = i;
-		}
-	}
-	if( !total ) {
-		return;
-	}
-	TF2_ShowFollowingAnnotation(clients, total, followEntity, text, id, sound, lifetime);
+  int[] clients = new int[MaxClients];
+  int total = 0;
+  
+  for( int i=1; i<=MaxClients; i++ ) {
+    if (IsClientInGame(i)) {
+      clients[total++] = i;
+    }
+  }
+  if( !total ) {
+    return;
+  }
+  TF2_ShowFollowingAnnotation(clients, total, followEntity, text, id, sound, lifetime);
 }

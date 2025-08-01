@@ -130,12 +130,12 @@ enum
 
 enum
 {
-	DONT_BLEED = -1,
-	
-	BLOOD_COLOR_RED = 0,
-	BLOOD_COLOR_YELLOW,
-	BLOOD_COLOR_GREEN,
-	BLOOD_COLOR_MECH,
+  DONT_BLEED = -1,
+  
+  BLOOD_COLOR_RED = 0,
+  BLOOD_COLOR_YELLOW,
+  BLOOD_COLOR_GREEN,
+  BLOOD_COLOR_MECH,
 };
 
 
@@ -280,7 +280,7 @@ public void OnLibraryAdded(const char[] name)
     //SaxtonHale_RegisterClass("GrayMannPyroMinion",    VSHClassType_Boss);
     SaxtonHale_RegisterClass("Zombie",                VSHClassType_Boss);
 
-	  // Register ability
+    // Register ability
     SaxtonHale_RegisterClass("BodyEat",               VSHClassType_Ability);
     SaxtonHale_RegisterClass("Bomb",                  VSHClassType_Ability);
     SaxtonHale_RegisterClass("BombProjectile",        VSHClassType_Ability);

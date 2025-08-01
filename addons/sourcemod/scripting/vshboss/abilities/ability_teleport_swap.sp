@@ -228,12 +228,12 @@ public void TeleportSwap_OnButtonRelease(SaxtonHaleBase boss, int button)
     
       // Spawn Portal Exit at Boss
       float flPos[3]; GetClientAbsOrigin(iClient[0], flPos);
-		  gl_iVortexIndex[1] = CreateEntityByName("info_target");
+      gl_iVortexIndex[1] = CreateEntityByName("info_target");
       DispatchKeyValue(gl_iVortexIndex[1], "targetname", "vortex_exit_loser");
-		  DispatchSpawn(gl_iVortexIndex[1]);
-		  TeleportEntity(gl_iVortexIndex[1], flPos, NULL_VECTOR, NULL_VECTOR);
+      DispatchSpawn(gl_iVortexIndex[1]);
+      TeleportEntity(gl_iVortexIndex[1], flPos, NULL_VECTOR, NULL_VECTOR);
       CreateTimer(30.0, RemoveEnt, EntIndexToEntRef(gl_iVortexIndex[1]), TIMER_FLAG_NO_MAPCHANGE);
-		  CreateTimer(30.0, RemoveEnt, EntIndexToEntRef(AttachParticle(iClient[0], "eb_death_vortex01", 50.0, false, 30.0)));
+      CreateTimer(30.0, RemoveEnt, EntIndexToEntRef(AttachParticle(iClient[0], "eb_death_vortex01", 50.0, false, 30.0)));
     }
   }
 }

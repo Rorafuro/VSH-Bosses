@@ -85,79 +85,79 @@ static char BunnyRandomVoice[][] = {
 
 
 stock int AttachProjectileModel(const int entity, const char[] strModel, char[] strAnim = "") {
-	if( !IsValidEntity(entity) ) {
-		return -1;
-	}
-	int model = CreateEntityByName("prop_dynamic");
-	if( IsValidEntity(model) ) {
-		float pos[3], ang[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", pos);
-		GetEntPropVector(entity, Prop_Send, "m_angRotation", ang);
-		TeleportEntity(model, pos, ang, NULL_VECTOR);
-		DispatchKeyValue(model, "model", strModel);
-		DispatchSpawn(model);
-		SetVariantString("!activator");
-		AcceptEntityInput(model, "SetParent", entity, model, 0);
-		if( strAnim[0] != '\0' ) {
-			SetVariantString(strAnim);
-			AcceptEntityInput(model, "SetDefaultAnimation");
-			SetVariantString(strAnim);
-			AcceptEntityInput(model, "SetAnimation");
-		}
-		SetEntPropEnt(model, Prop_Send, "m_hOwnerEntity", entity);
-		return model;
-	}
-	else {
-		LogError("(AttachProjectileModel): Could not create prop_dynamic");
-	}
-	return -1;
+  if( !IsValidEntity(entity) ) {
+    return -1;
+  }
+  int model = CreateEntityByName("prop_dynamic");
+  if( IsValidEntity(model) ) {
+    float pos[3], ang[3];
+    GetEntPropVector(entity, Prop_Send, "m_vecOrigin", pos);
+    GetEntPropVector(entity, Prop_Send, "m_angRotation", ang);
+    TeleportEntity(model, pos, ang, NULL_VECTOR);
+    DispatchKeyValue(model, "model", strModel);
+    DispatchSpawn(model);
+    SetVariantString("!activator");
+    AcceptEntityInput(model, "SetParent", entity, model, 0);
+    if( strAnim[0] != '\0' ) {
+      SetVariantString(strAnim);
+      AcceptEntityInput(model, "SetDefaultAnimation");
+      SetVariantString(strAnim);
+      AcceptEntityInput(model, "SetAnimation");
+    }
+    SetEntPropEnt(model, Prop_Send, "m_hOwnerEntity", entity);
+    return model;
+  }
+  else {
+    LogError("(AttachProjectileModel): Could not create prop_dynamic");
+  }
+  return -1;
 }
 
 stock void SpawnManyAmmoPacks(const int client, const char[] model, int skin=0, int num=14, float offsz = 30.0)
 {
-	float pos[3], vel[3], ang[3];
-	ang[0] = 90.0;
-	ang[1] = 0.0;
-	ang[2] = 0.0;
-	GetClientAbsOrigin(client, pos);
-	pos[2] += offsz;
-	for( int i=0; i<num; i++ ) {
-		vel[0] = GetRandomFloat(-400.0, 400.0);
-		vel[1] = GetRandomFloat(-400.0, 400.0);
-		vel[2] = GetRandomFloat(300.0, 500.0);
-		pos[0] += GetRandomFloat(-5.0, 5.0);
-		pos[1] += GetRandomFloat(-5.0, 5.0);
-		int ent = CreateEntityByName("tf_ammo_pack");
-		if( !IsValidEntity(ent) )
-			continue;
-		SetEntityModel(ent, model);
-		DispatchKeyValue(ent, "OnPlayerTouch", "!self,Kill,,0,-1"); /// for safety, but it shouldn't act like a normal ammopack
-		SetEntProp(ent, Prop_Send, "m_nSkin", skin);
-		SetEntProp(ent, Prop_Send, "m_nSolidType", 6);
-		SetEntProp(ent, Prop_Send, "m_usSolidFlags", 152);
-		SetEntProp(ent, Prop_Send, "m_triggerBloat", 24);
-		SetEntProp(ent, Prop_Send, "m_CollisionGroup", 1);
-		SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
-		SetEntProp(ent, Prop_Send, "m_iTeamNum", TFTeam_Attack);
-		TeleportEntity(ent, pos, ang, vel);
-		DispatchSpawn(ent);
-		TeleportEntity(ent, pos, ang, vel);
-		SetEntProp(ent, Prop_Data, "m_iHealth", 900);
-		int offs = GetEntSendPropOffs(ent, "m_vecInitialVelocity", true);
-		SetEntData(ent, offs-4, 1, _, true);
-	}
+  float pos[3], vel[3], ang[3];
+  ang[0] = 90.0;
+  ang[1] = 0.0;
+  ang[2] = 0.0;
+  GetClientAbsOrigin(client, pos);
+  pos[2] += offsz;
+  for( int i=0; i<num; i++ ) {
+    vel[0] = GetRandomFloat(-400.0, 400.0);
+    vel[1] = GetRandomFloat(-400.0, 400.0);
+    vel[2] = GetRandomFloat(300.0, 500.0);
+    pos[0] += GetRandomFloat(-5.0, 5.0);
+    pos[1] += GetRandomFloat(-5.0, 5.0);
+    int ent = CreateEntityByName("tf_ammo_pack");
+    if( !IsValidEntity(ent) )
+      continue;
+    SetEntityModel(ent, model);
+    DispatchKeyValue(ent, "OnPlayerTouch", "!self,Kill,,0,-1"); /// for safety, but it shouldn't act like a normal ammopack
+    SetEntProp(ent, Prop_Send, "m_nSkin", skin);
+    SetEntProp(ent, Prop_Send, "m_nSolidType", 6);
+    SetEntProp(ent, Prop_Send, "m_usSolidFlags", 152);
+    SetEntProp(ent, Prop_Send, "m_triggerBloat", 24);
+    SetEntProp(ent, Prop_Send, "m_CollisionGroup", 1);
+    SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
+    SetEntProp(ent, Prop_Send, "m_iTeamNum", TFTeam_Attack);
+    TeleportEntity(ent, pos, ang, vel);
+    DispatchSpawn(ent);
+    TeleportEntity(ent, pos, ang, vel);
+    SetEntProp(ent, Prop_Data, "m_iHealth", 900);
+    int offs = GetEntSendPropOffs(ent, "m_vecInitialVelocity", true);
+    SetEntData(ent, offs-4, 1, _, true);
+  }
 }
 
 public Action Timer_SetEggBomb(Handle timer, any ref)
 {
-	int entity = EntRefToEntIndex(ref);
-	if( FileExists(BUNNY_EGG, true) && IsModelPrecached(BUNNY_EGG) && IsValidEntity(entity) ) {
-		int att = AttachProjectileModel(entity, BUNNY_EGG);
-		SetEntProp(att, Prop_Send, "m_nSkin", 0);
-		SetEntityRenderMode(entity, RENDER_TRANSCOLOR);
-		SetEntityRenderColor(entity, 255, 255, 255, 0);
-	}
-	return Plugin_Continue;
+  int entity = EntRefToEntIndex(ref);
+  if( FileExists(BUNNY_EGG, true) && IsModelPrecached(BUNNY_EGG) && IsValidEntity(entity) ) {
+    int att = AttachProjectileModel(entity, BUNNY_EGG);
+    SetEntProp(att, Prop_Send, "m_nSkin", 0);
+    SetEntityRenderMode(entity, RENDER_TRANSCOLOR);
+    SetEntityRenderColor(entity, 255, 255, 255, 0);
+  }
+  return Plugin_Continue;
 }
 
 
@@ -201,10 +201,10 @@ public void Bunny_OnEntityCreated(SaxtonHaleBase boss, int iEntity, const char[]
   {
     if (FileExists(BUNNY_EGG, true) && IsModelPrecached(BUNNY_EGG) && IsValidEntity(iEntity)) {
       int att = AttachProjectileModel(iEntity, BUNNY_EGG);
-		  SetEntProp(att, Prop_Send, "m_nSkin", 0);
-		  SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
-		  SetEntityRenderColor(iEntity, 255, 255, 255, 0);
-	  }
+      SetEntProp(att, Prop_Send, "m_nSkin", 0);
+      SetEntityRenderMode(iEntity, RENDER_TRANSCOLOR);
+      SetEntityRenderColor(iEntity, 255, 255, 255, 0);
+    }
   }
 }
 
